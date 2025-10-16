@@ -797,7 +797,22 @@ ${itemsText}
                 });
 
                 const messageDiv = document.getElementById('orderMessage');
-                messageDiv.innerHTML = '<div class="success-message">✅ Заказ успешно отправлен! Мы свяжемся с вами в ближайшее время.</div>';
+                messageDiv.innerHTML = `
+                    <div class="success-message">
+                        <h3>✅ Заказ успешно оформлен!</h3>
+                        <p style="margin-top: 1rem; font-size: 0.95rem;">
+                            Спасибо за ваш заказ, ${name}!<br><br>
+                            <strong>Детали заказа:</strong><br>
+                            📱 Мы позвоним вам по номеру: ${phone}<br>
+                            📧 Или напишем на: ${email || 'не указан'}<br><br>
+                            <strong>Ваш букет:</strong><br>
+                            ${itemsText.replace(/•/g, '✓')}<br><br>
+                            <strong>Сумма:</strong> ${total} ₽<br>
+                            <strong>Дата доставки:</strong> ${date}<br><br>
+                            Спасибо, что выбрали Меланж! 🌸
+                        </p>
+                    </div>
+                `;
 
                 document.getElementById('orderForm').reset();
                 cart = [];
@@ -806,7 +821,7 @@ ${itemsText}
                 setTimeout(() => {
                     closeOrder();
                     messageDiv.innerHTML = '';
-                }, 3000);
+                }, 5000);
             } catch (error) {
                 const messageDiv = document.getElementById('orderMessage');
                 messageDiv.innerHTML = '<div class="error-message">❌ Ошибка при отправке. Позвоните: +7 (999) 466-86-24</div>';
