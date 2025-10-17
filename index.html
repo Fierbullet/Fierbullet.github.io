@@ -5,12 +5,11 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Mélange — Меланж — Цветочный магазин</title>
 
-  <!-- Шрифты -->
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
 
   <style>
     :root{
-      --accent-dark:#5d6f4f;   /* болотный / натуральный */
+      --accent-dark:#5d6f4f;
       --accent:#8aa776;
       --muted:#eef2ea;
       --bg:#f6f7f4;
@@ -18,125 +17,64 @@
       --text:#222;
       --soft-shadow: 0 6px 18px rgba(93,111,79,0.06);
     }
-
     *{box-sizing:border-box;margin:0;padding:0}
     html,body{height:100%}
-    body{
-      font-family:"Inter", Arial, sans-serif;
-      background:var(--bg);
-      color:var(--text);
-      -webkit-font-smoothing:antialiased;
-      line-height:1.4;
-    }
+    body{font-family:"Inter", Arial, sans-serif;background:var(--bg);color:var(--text);-webkit-font-smoothing:antialiased;line-height:1.4}
 
     /* NAV */
-    nav{
-      position:sticky; top:0; z-index:60;
-      background:linear-gradient(135deg,var(--accent-dark),var(--accent));
-      padding:12px 18px;
-      box-shadow:0 2px 10px rgba(0,0,0,0.06);
-    }
-    .nav-inner{
-      max-width:1200px; margin:0 auto;
-      display:flex; align-items:center; justify-content:space-between; gap:12px;
-    }
-    .logo{
-      color:#fff; font-weight:700; letter-spacing:0.4px; display:flex; align-items:center; gap:10px; font-size:1.05rem;
-    }
+    nav{position:sticky;top:0;z-index:60;background:linear-gradient(135deg,var(--accent-dark),var(--accent));padding:12px 18px;box-shadow:0 2px 10px rgba(0,0,0,0.06)}
+    .nav-inner{max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:12px}
+    .logo{color:#fff;font-weight:700;letter-spacing:0.4px;display:flex;align-items:center;gap:10px;font-size:1.05rem}
     .logo span{font-size:1.5rem}
-    .nav-links{display:flex; gap:14px; align-items:center;}
-    .nav-links a{ color:#fff; text-decoration:none; font-weight:600; padding:6px 10px; border-radius:8px; opacity:0.95}
-    .cart-icon{ position:relative; cursor:pointer; font-size:1.25rem; color:#fff; }
-    .cart-count{ position:absolute; top:-8px; right:-10px; background:#2f4d30; color:#fff; width:22px; height:22px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:0.78rem; }
+    .nav-links{display:flex;gap:14px;align-items:center}
+    .nav-links a{color:#fff;text-decoration:none;font-weight:600;padding:6px 10px;border-radius:8px;opacity:0.95}
+    .cart-icon{position:relative;cursor:pointer;font-size:1.25rem;color:#fff}
+    .cart-count{position:absolute;top:-8px;right:-10px;background:#2f4d30;color:#fff;width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:0.78rem}
 
-    /* HERO - ТЕКСТ БЕЛЫЙ ПРЯМО НА ИЗОБРАЖЕНИИ (без белой подложки) */
-    .hero{
-      background: url('Airbrush-Image-Enhancer-1760695648307.jpg') center/cover no-repeat;
-      min-height:340px; display:flex; align-items:center; justify-content:center; padding:48px 16px;
-      box-shadow:0 6px 24px rgba(0,0,0,0.05);
-    }
-    .hero-inner{
-      width:100%; max-width:1100px; padding:28px; text-align:left;
-    }
-    .hero-title{
-      font-family:'Dancing Script',cursive; color:#fff; font-size:2.6rem; line-height:1; text-shadow:0 6px 20px rgba(0,0,0,0.45);
-      margin-bottom:8px;
-    }
-    .hero-sub{
-      color:#fff; font-size:1.05rem; margin-bottom:10px; text-shadow:0 6px 18px rgba(0,0,0,0.35);
-    }
-    .hero-meta{
-      color:#fff; opacity:0.95; font-weight:600; text-shadow:0 4px 12px rgba(0,0,0,0.32)
-    }
-    .hero-actions{ margin-top:18px; display:flex; gap:12px; flex-wrap:wrap }
-    .hero-btn{
-      background:rgba(255,255,255,0.08); color:#fff; padding:10px 14px; border-radius:10px; border:1px solid rgba(255,255,255,0.08); cursor:pointer; font-weight:700;
-      backdrop-filter: blur(2px);
-    }
+    /* HERO ( белый текст прямо на изображении) */
+    .hero{background:url('Airbrush-Image-Enhancer-1760695648307.jpg') center/cover no-repeat;min-height:340px;display:flex;align-items:center;justify-content:center;padding:48px 16px;box-shadow:0 6px 24px rgba(0,0,0,0.05)}
+    .hero-inner{width:100%;max-width:1100px;padding:28px;text-align:left}
+    .hero-title{font-family:'Dancing Script',cursive;color:#fff;font-size:2.6rem;line-height:1;margin-bottom:8px;text-shadow:0 6px 20px rgba(0,0,0,0.45)}
+    .hero-sub{color:#fff;font-size:1.05rem;margin-bottom:10px;text-shadow:0 6px 18px rgba(0,0,0,0.35)}
+    .hero-meta{color:#fff;opacity:0.95;font-weight:600;text-shadow:0 4px 12px rgba(0,0,0,0.32)}
 
-    /* CATEGORY TILES (теперь слева→направо, большие плашки) */
-    .category-tiles{
-      max-width:1100px; margin:18px auto 0; padding:0 16px;
-      display:grid; grid-template-columns: repeat(3, 1fr); gap:14px;
-    }
-    .cat-tile{
-      background:var(--card); border-radius:12px; height:92px; /* примерно половина карточки */
-      display:flex; align-items:center; padding:12px 16px; gap:12px; cursor:pointer;
-      box-shadow: var(--soft-shadow);
-      border:1px solid rgba(47,77,48,0.03);
-      transition:transform .12s, box-shadow .12s, border-color .12s;
-    }
-    .cat-tile:hover{ transform:translateY(-4px); box-shadow:0 12px 30px rgba(45,73,44,0.06); }
-    .cat-tile h3{ font-size:1.05rem; color:var(--accent-dark); margin:0; font-weight:700;}
-    .cat-tile p{ font-size:0.92rem; color:#6b6b6b; margin:0 0 0 auto; opacity:0.9; text-align:right; }
+    /* CATEGORY TILES — 3 большие плашки слева->направо */
+    .category-tiles{max-width:1100px;margin:18px auto 0;padding:0 16px;display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+    .cat-tile{background:var(--card);border-radius:12px;height:92px;display:flex;align-items:center;padding:12px 16px;gap:12px;cursor:pointer;box-shadow:var(--soft-shadow);border:1px solid rgba(47,77,48,0.03);transition:transform .12s,box-shadow .12s,border-color .12s}
+    .cat-tile:hover{transform:translateY(-4px);box-shadow:0 12px 30px rgba(45,73,44,0.06)}
+    .cat-tile h3{font-size:1.05rem;color:var(--accent-dark);margin:0;font-weight:700}
+    .cat-tile p{font-size:0.92rem;color:#6b6b6b;margin:0 0 0 auto;text-align:right}
 
-    /* MAIN catalog */
-    main{ max-width:1100px; margin:18px auto 80px; padding:0 16px; }
-    .catalog-section{ margin-top:18px; }
-    .catalog-title{ font-size:1.28rem; margin-bottom:12px; color:var(--accent-dark) }
+    /* MAIN */
+    main{max-width:1100px;margin:18px auto 80px;padding:0 16px}
+    .catalog-section{margin-top:18px}
+    .catalog-title{font-size:1.28rem;margin-bottom:12px;color:var(--accent-dark)}
+    .products-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px}
+    .product-card{background:var(--card);border-radius:14px;padding:12px;display:flex;flex-direction:column;gap:10px;box-shadow:var(--soft-shadow);border:1px solid rgba(47,77,48,0.03)}
+    .product-image{height:180px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:2.4rem;color:var(--accent-dark);background:linear-gradient(180deg,rgba(240,246,236,0.6),rgba(250,252,248,0.4))}
+    .product-info h3{font-size:1.05rem;margin:0;color:var(--text)}
+    .product-price{font-weight:700;color:var(--accent-dark)}
+    .product-controls{display:flex;gap:8px;align-items:center;margin-top:auto}
+    .btn{background:var(--accent-dark);color:#fff;padding:10px;border-radius:10px;border:none;cursor:pointer;font-weight:700}
+    .btn.ghost{background:transparent;color:var(--accent-dark);border:1px solid rgba(93,111,79,0.08)}
 
-    .products-grid{
-      display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
-      gap:14px;
-    }
-    .product-card{
-      background:var(--card); border-radius:14px; padding:12px; display:flex; flex-direction:column; gap:10px; box-shadow:var(--soft-shadow);
-      border:1px solid rgba(47,77,48,0.03);
-    }
-    .product-image{ height:180px; border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:2.4rem; color:var(--accent-dark); background:linear-gradient(180deg,rgba(240,246,236,0.6),rgba(250,252,248,0.4)); }
-    .product-info h3{ font-size:1.05rem; margin:0; color:var(--text) }
-    .product-price{ font-weight:700; color:var(--accent-dark) }
-    .product-controls{ display:flex; gap:8px; align-items:center; margin-top:auto; }
-    .btn{ background:var(--accent-dark); color:#fff; padding:10px; border-radius:10px; border:none; cursor:pointer; font-weight:700; }
-    .btn.ghost{ background:transparent; color:var(--accent-dark); border:1px solid rgba(93,111,79,0.08) }
-
-    /* modal/cart */
-    .modal{ display:none; position:fixed; z-index:1200; left:0; top:0; width:100%; height:100%; background:rgba(0,0,0,0.45); overflow:auto; padding:40px 18px; }
-    .modal-content{ background:#fff; margin:40px auto; border-radius:12px; max-width:760px; padding:18px; box-shadow:0 12px 40px rgba(0,0,0,0.25) }
-    .modal-header{ display:flex; justify-content:space-between; align-items:center; margin-bottom:10px }
-    .close{ background:none; border:none; font-size:26px; cursor:pointer; color:#666 }
-    .cart-items{ max-height:360px; overflow:auto; margin-bottom:12px }
-    .cart-item{ display:flex; justify-content:space-between; align-items:center; padding:10px; border-radius:8px; background:var(--muted); margin-bottom:10px; border-left:4px solid var(--accent-dark) }
-    .cart-item .cart-item-name{ font-weight:700; color:var(--accent-dark) }
-    .cart-total{ background:linear-gradient(90deg,var(--accent-dark),var(--accent)); color:white; padding:12px; border-radius:8px; font-weight:700; text-align:right; }
-
-    .form-group{ margin-bottom:10px }
-    .form-group label{ display:block; color:var(--accent-dark); font-weight:600; margin-bottom:6px }
-    .form-group input,.form-group textarea{ width:100%; padding:10px; border-radius:8px; border:1px solid #eee; font-size:1rem }
-
-    footer{ background:var(--accent-dark); color:white; padding:26px; text-align:center; border-top-left-radius:16px; border-top-right-radius:16px; margin-top:36px }
+    /* MODALS */
+    .modal{display:none;position:fixed;z-index:1200;left:0;top:0;width:100%;height:100%;background:rgba(0,0,0,0.45);overflow:auto;padding:40px 18px}
+    .modal-content{background:#fff;margin:40px auto;border-radius:12px;max-width:760px;padding:18px;box-shadow:0 12px 40px rgba(0,0,0,0.25)}
+    .modal-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+    .close{background:none;border:none;font-size:26px;cursor:pointer;color:#666}
+    .cart-items{max-height:360px;overflow:auto;margin-bottom:12px}
+    .cart-item{display:flex;justify-content:space-between;align-items:center;padding:10px;border-radius:8px;background:var(--muted);margin-bottom:10px;border-left:4px solid var(--accent-dark)}
+    .cart-item .cart-item-name{font-weight:700;color:var(--accent-dark)}
+    .cart-total{background:linear-gradient(90deg,var(--accent-dark),var(--accent));color:white;padding:12px;border-radius:8px;font-weight:700;text-align:right}
+    .form-group{margin-bottom:10px}
+    .form-group label{display:block;color:var(--accent-dark);font-weight:600;margin-bottom:6px}
+    .form-group input,.form-group textarea{width:100%;padding:10px;border-radius:8px;border:1px solid #eee;font-size:1rem}
+    footer{background:var(--accent-dark);color:white;padding:26px;text-align:center;border-top-left-radius:16px;border-top-right-radius:16px;margin-top:36px}
 
     /* responsive */
-    @media (max-width:980px){
-      .category-tiles{ grid-template-columns: repeat(3, 1fr); gap:10px }
-      .cat-tile{ height:86px }
-    }
-    @media (max-width:700px){
-      .hero-title{ font-size:2.1rem }
-      .category-tiles{ grid-template-columns: 1fr; }
-      .cat-tile{ height:86px }
-      .product-image{ height:140px }
-    }
+    @media (max-width:980px){ .category-tiles{grid-template-columns:repeat(3,1fr);gap:10px} .cat-tile{height:86px} }
+    @media (max-width:700px){ .hero-title{font-size:2.1rem} .category-tiles{grid-template-columns:1fr} .cat-tile{height:86px} .product-image{height:140px} }
   </style>
 </head>
 <body>
@@ -144,6 +82,8 @@
   <!-- NAV -->
   <nav>
     <div class="nav-inner">
+      <div class="logo"><span>🌸</span> Меланж</div>
+
       <div class="nav-links">
         <a href="#catalog" onclick="showCategory('bouquets')">Каталог</a>
         <a href="#contacts">Контакты</a>
@@ -159,15 +99,12 @@
     <div class="hero-inner">
       <div class="hero-title">Mélange</div>
       <div class="hero-sub">Прекрасные цветы для каждого момента жизни — собери свои чувства в букет  ~</div>
-
-      <div class="hero-actions" style="margin-top:14px">
-        <button class="hero-btn" onclick="scrollToCatalog()">Посмотреть каталог</button>
-        <button class="hero-btn" onclick="openCart()">Открыть корзину</button>
-      </div>
+      <div class="hero-meta">Mélange — Меланж</div>
+      <!-- кнопки в шапке удалены по запросу -->
     </div>
   </section>
 
-  <!-- CATEGORY TILES (3 большие плашки слева→направо) -->
+  <!-- CATEGORY TILES (3 большие плашки слева->направо) -->
   <div class="category-tiles" aria-hidden="false">
     <div class="cat-tile" id="tile-bouquets" onclick="onCatClick('bouquets')">
       <div>
@@ -249,7 +186,7 @@
 
       <div id="orderMessage"></div>
 
-      <form id="orderForm" onsubmit="submitOrder(event)">
+      <form id="orderForm">
         <div class="form-group">
           <label for="name">Ваше имя</label>
           <input id="name" required placeholder="Иван Петров" />
@@ -280,9 +217,7 @@
     </div>
   </div>
 
-  <footer>
-    &copy; 2025 Меланж — цветочный магазин.
-  </footer>
+  <footer>&copy; 2025 Меланж — цветочный магазин.</footer>
 
   <script>
     /* ================= DATA ================ */
@@ -293,36 +228,34 @@
       { id: 4, name:'Композиция де люкс', price:3500, emoji:'💐' },
       { id: 5, name:'Нежность', price:2200, emoji:'🌸' }
     ];
-
     const FLOWERS = [
-      { id: 100, name:'Хризантема 60 см', price:259, emoji:'🌼' },
-      { id: 101, name:'Гербера микс', price:200, emoji:'🌸' },
-      { id: 102, name:'Гиперикум микс', price:300, emoji:'🍒' },
-      { id: 103, name:'Магнум', price:350, emoji:'🌺' },
-      { id: 104, name:'Нерине Веста (светло-роз)', price:280, emoji:'🌷' },
-      { id: 105, name:'Подсолнух', price:350, emoji:'🌻' },
-      { id: 106, name:'Эустома', price:400, emoji:'💮' },
-      { id: 107, name:'Цимбидиум микс (1 шт.)', price:350, emoji:'🌿' },
-      { id: 108, name:'Роза Мондиаль 60 см', price:300, emoji:'🌹' },
-      { id: 109, name:'Роза Пинк Флойд 60 см', price:350, emoji:'🌷' },
-      { id: 110, name:'Роза Ред Наоми 60 см', price:250, emoji:'🌹' },
-      { id: 111, name:'Роза кустовая Мисти Баблз', price:550, emoji:'💐' },
-      { id: 112, name:'Роза Эквадор микс 60', price:280, emoji:'🌹' }
+      { id:100, name:'Хризантема 60 см', price:259, emoji:'🌼' },
+      { id:101, name:'Гербера микс', price:200, emoji:'🌸' },
+      { id:102, name:'Гиперикум микс', price:300, emoji:'🍒' },
+      { id:103, name:'Магнум', price:350, emoji:'🌺' },
+      { id:104, name:'Нерине Веста (светло-роз)', price:280, emoji:'🌷' },
+      { id:105, name:'Подсолнух', price:350, emoji:'🌻' },
+      { id:106, name:'Эустома', price:400, emoji:'💮' },
+      { id:107, name:'Цимбидиум микс (1 шт.)', price:350, emoji:'🌿' },
+      { id:108, name:'Роза Мондиаль 60 см', price:300, emoji:'🌹' },
+      { id:109, name:'Роза Пинк Флойд 60 см', price:350, emoji:'🌷' },
+      { id:110, name:'Роза Ред Наоми 60 см', price:250, emoji:'🌹' },
+      { id:111, name:'Роза кустовая Мисти Баблз', price:550, emoji:'💐' },
+      { id:112, name:'Роза Эквадор микс 60', price:280, emoji:'🌹' }
     ];
-
     const DECOR = [
-      { id: 200, name:'Эвкалипт', price:300, emoji:'🌿' },
-      { id: 201, name:'Ветка ягод', price:300, emoji:'🍓' },
-      { id: 202, name:'Гипсофила краш. Рейнбоу', price:300, emoji:'🌈' },
-      { id: 203, name:'Бруния', price:300, emoji:'🌾' },
-      { id: 204, name:'Лаванда', price:300, emoji:'💜' },
-      { id: 205, name:'Солидаго', price:250, emoji:'🌼' },
-      { id: 206, name:'Трахелиум Блю Лэйк Мичиган', price:250, emoji:'💙' },
-      { id: 207, name:'Эрингиум Супер Нова Кьюстар', price:400, emoji:'🌌' }
+      { id:200, name:'Эвкалипт', price:300, emoji:'🌿' },
+      { id:201, name:'Ветка ягод', price:300, emoji:'🍓' },
+      { id:202, name:'Гипсофила краш. Рейнбоу', price:300, emoji:'🌈' },
+      { id:203, name:'Бруния', price:300, emoji:'🌾' },
+      { id:204, name:'Лаванда', price:300, emoji:'💜' },
+      { id:205, name:'Солидаго', price:250, emoji:'🌼' },
+      { id:206, name:'Трахелиум Блю Лэйк Мичиган', price:250, emoji:'💙' },
+      { id:207, name:'Эрингиум Супер Нова Кьюстар', price:400, emoji:'🌌' }
     ];
 
     /* ================ STATE ================ */
-    let cart = []; // {id,name,price,qty}
+    let cart = [];
     const cartCountEl = document.getElementById('cartCount');
 
     function findProductById(id){
@@ -330,9 +263,7 @@
     }
 
     /* ================ RENDER ================ */
-    function escapeHtml(text){
-      return String(text).replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;');
-    }
+    function escapeHtml(text){ return String(text).replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;'); }
 
     function renderGrid(gridId, items){
       const grid = document.getElementById(gridId);
@@ -350,28 +281,19 @@
       `).join('');
     }
 
-    function renderAll(){
-      renderGrid('bouquetsGrid', BOUQUETS);
-      renderGrid('flowersGrid', FLOWERS);
-      renderGrid('decorGrid', DECOR);
-      updateCartCount();
-    }
+    function renderAll(){ renderGrid('bouquetsGrid',BOUQUETS); renderGrid('flowersGrid',FLOWERS); renderGrid('decorGrid',DECOR); updateCartCount(); }
 
     /* ================ CART ================ */
     function addToCart(productId){
       const prod = findProductById(productId);
       if(!prod) return alert('Товар не найден');
-      const exist = cart.find(i=>i.id===productId);
-      if(exist) exist.qty++;
-      else cart.push({ id:prod.id, name:prod.name, price:prod.price, qty:1 });
+      const exist = cart.find(i => i.id === productId);
+      if(exist) exist.qty++; else cart.push({ id:prod.id, name:prod.name, price:prod.price, qty:1 });
       updateCartCount();
       flashToast(`Добавлено: ${prod.name}`);
     }
 
-    function updateCartCount(){
-      const count = cart.reduce((s,i)=>s+i.qty,0);
-      cartCountEl.textContent = count;
-    }
+    function updateCartCount(){ const count = cart.reduce((s,i)=>s+i.qty,0); cartCountEl.textContent = count; }
 
     function openCart(){
       const modal = document.getElementById('cartModal');
@@ -394,7 +316,6 @@
             </div>
           </div>
         `).join('');
-
         content.innerHTML = `
           <div class="cart-items">${itemsHtml}</div>
           <div style="margin-top:10px">
@@ -414,7 +335,7 @@
     function removeFromCart(idx){ cart.splice(idx,1); updateCartCount(); openCart(); }
     function clearCart(){ cart = []; updateCartCount(); openCart(); flashToast('Корзина очищена'); }
 
-    /* ================ ORDER (Telegram + Google Sheets) ================ */
+    /* ================ ORDER ================ */
     const TELEGRAM_TOKEN = '8498848056:AAE8c_yh6rCk2paOR-2ut7vRAadH4-Lrdhs';
     const TELEGRAM_CHAT_ID = '503216481';
     const TELEGRAM_URL = `https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage`;
@@ -446,29 +367,31 @@
 
       const itemsText = cart.map(i=>`• ${i.name} x${i.qty} = ${i.price * i.qty}₽`).join('\n');
       const total = cart.reduce((s,i)=>s + i.price * i.qty, 0);
-
       const orderData = { name, phone, email, address, date, items: itemsText, total, message };
 
-      const telegramMessage = `🌸 *НОВЫЙ ЗАКАЗ МЕЛАНЖ* 🌸%0A%0A` +
-        `👤 *Имя:* ${escapeMd(name)}%0A` +
-        `📱 *Телефон:* ${escapeMd(phone)}%0A` +
-        `📧 *Email:* ${escapeMd(email || 'не указан')}%0A` +
-        `📍 *Адрес:* ${escapeMd(address)}%0A` +
-        `📅 *Дата доставки:* ${escapeMd(date)}%0A%0A` +
-        `📦 *ТОВАРЫ:*%0A${encodeURIComponent(itemsText)}%0A%0A` +
-        `💰 *ИТОГО: ${total} ₽*%0A%0A` +
+      // build Telegram message as plain text (no URL-encoding), escape Markdown
+      const telegramText = `🌸 *НОВЫЙ ЗАКАЗ МЕЛАНЖ* 🌸\n\n` +
+        `👤 *Имя:* ${escapeMd(name)}\n` +
+        `📱 *Телефон:* ${escapeMd(phone)}\n` +
+        `📧 *Email:* ${escapeMd(email || 'не указан')}\n` +
+        `📍 *Адрес:* ${escapeMd(address)}\n` +
+        `📅 *Дата доставки:* ${escapeMd(date)}\n\n` +
+        `📦 *ТОВАРЫ:*\n${itemsText}\n\n` +
+        `💰 *ИТОГО: ${total} ₽*\n\n` +
         `💬 *Пожелания:* ${escapeMd(message || 'не указаны')}`;
 
       try{
+        // 1) send to Telegram
         await fetch(TELEGRAM_URL, {
           method:'POST',
           headers:{ 'Content-Type':'application/json' },
-          body: JSON.stringify({ chat_id: TELEGRAM_CHAT_ID, text: decodeURIComponent(telegramMessage), parse_mode:'Markdown' })
+          body: JSON.stringify({ chat_id: TELEGRAM_CHAT_ID, text: telegramText, parse_mode: 'Markdown' })
         });
 
+        // 2) send to Google Sheets
+        // IMPORTANT: do not set Content-Type header to avoid preflight; Apps Script usually accepts POST body via e.postData.contents
         await fetch(GOOGLE_SHEETS_URL, {
-          method:'POST',
-          headers:{ 'Content-Type':'application/json' },
+          method: 'POST',
           body: JSON.stringify(orderData)
         });
 
@@ -486,10 +409,10 @@
         cart = []; updateCartCount();
 
         setTimeout(()=>{ closeOrder(); document.getElementById('orderMessage').innerHTML=''; }, 3800);
-      }catch(err){
-        console.error('Order send error',err);
+      } catch(err){
+        console.error('Order send error', err);
         document.getElementById('orderMessage').innerHTML = `<div style="background:#ff6b6b;color:white;padding:10px;border-radius:8px">❌ Ошибка при отправке. Позвоните: +7 (999) 466-86-24</div>`;
-      }finally{
+      } finally {
         submitBtn.disabled = false; submitBtn.textContent = 'Отправить заказ';
       }
     }
@@ -498,28 +421,24 @@
 
     /* ================ CATEGORIES ================ */
     function onCatClick(cat){
-      // remove active styles from tiles, set current
+      // highlight selected tile
       document.querySelectorAll('.cat-tile').forEach(t=>t.style.borderColor='rgba(47,77,48,0.03)');
       if(cat==='bouquets') document.getElementById('tile-bouquets').style.borderColor='rgba(93,111,79,0.18)';
       if(cat==='decor') document.getElementById('tile-decor').style.borderColor='rgba(93,111,79,0.18)';
       if(cat==='flowers') document.getElementById('tile-flowers').style.borderColor='rgba(93,111,79,0.18)';
 
+      // show section; do NOT scroll on desktop/tablet
       document.querySelectorAll('[data-section]').forEach(sec => { sec.style.display = sec.dataset.section === cat ? '' : 'none'; });
-      setTimeout(()=>scrollToCatalog(), 80);
+
+      // only scroll on small screens (mobile)
+      if(window.innerWidth <= 700){ setTimeout(()=>scrollToCatalog(), 80); }
     }
     function showCategory(cat){ onCatClick(cat); }
     function scrollToCatalog(){ const el=document.getElementById('catalog'); if(!el) return; window.scrollTo({top:el.offsetTop-16, behavior:'smooth'}); }
 
-    /* ================ small helpers ================ */
-    function modalOutsideClick(e, id){ const m=document.getElementById(id); if(e.target===m) m.style.display='none'; }
-    function flashToast(text){
-      const t = document.createElement('div');
-      t.textContent = text;
-      Object.assign(t.style,{position:'fixed',right:'16px',bottom:'16px',background:'#2f4d30',color:'#fff',padding:'10px 14px',borderRadius:'10px',zIndex:2000,opacity:0,transition:'opacity .18s'});
-      document.body.appendChild(t);
-      requestAnimationFrame(()=>t.style.opacity=1);
-      setTimeout(()=>{ t.style.opacity=0; setTimeout(()=>t.remove(),260) },1400);
-    }
+    /* ================ helpers ================ */
+    function modalOutsideClick(e, id){ const m=document.getElementById(id); if(e.target === m) m.style.display='none'; }
+    function flashToast(text){ const t=document.createElement('div'); t.textContent=text; Object.assign(t.style,{position:'fixed',right:'16px',bottom:'16px',background:'#2f4d30',color:'#fff',padding:'10px 14px',borderRadius:'10px',zIndex:2000,opacity:0,transition:'opacity .18s'}); document.body.appendChild(t); requestAnimationFrame(()=>t.style.opacity=1); setTimeout(()=>{ t.style.opacity=0; setTimeout(()=>t.remove(),260) },1400); }
 
     /* ================ INIT ================ */
     document.addEventListener('DOMContentLoaded', function(){
@@ -528,7 +447,6 @@
       const d = new Date().toISOString().split('T')[0];
       const dateInput = document.getElementById('date');
       if(dateInput) dateInput.setAttribute('min', d);
-      // Hook form submit
       document.getElementById('orderForm').addEventListener('submit', submitOrder);
     });
   </script>
