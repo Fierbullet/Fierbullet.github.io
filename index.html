@@ -30,17 +30,17 @@
             justify-content: space-between;
             align-items: center;
         }
-        /* Hero section with background and logo */
+        /* Hero section with background */
         .hero {
-            background: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url('Airbrush-Image-Enhancer-1760695648307.jpg') center/cover no-repeat;
-            padding: 3rem 2rem;
+            background: linear-gradient(135deg, rgba(139,71,137,0.65) 0%, rgba(199,71,123,0.65) 100%), url('Airbrush-Image-Enhancer-1760695648307.jpg') center/cover no-repeat;
+            padding: 6rem 2rem;
             text-align: center;
             color: white;
+            animation: fadeIn 1s ease-in;
         }
-        .hero-logo {
-            max-width: 200px;
-            margin: 0 auto 2rem;
-            display: block;
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
         }
     </style>
 </head>
