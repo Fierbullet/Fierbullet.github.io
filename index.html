@@ -283,18 +283,28 @@
       { id:207, name:'Эрингиум Супер Нова Кьюстар', price:400, emoji:'🌌' }
     ];
 
-    /* ========== STATE ========== */
+    /* ========== STATE & CONFIG ========== */
     let cart = [];
     const cartCountEl = document.getElementById('cartCount');
 
-    // order number generator (session) starts at 344643
-    let nextOrderNumber = 344643;
+    // localStorage keys
+    const LS_CART_KEY = 'melange_cart_v1';
+    const LS_HISTORY_KEY = 'melange_orders_v1';
+    const LS_NEXT_ORDER_KEY = 'melange_next_order_v1';
 
-    // Google/Telegram endpoints (оставь как есть)
+    // order number generator (persistent)
+    let nextOrderNumber = (() => {
+      const raw = localStorage.getItem(LS_NEXT_ORDER_KEY);
+      if(raw) return Number(raw);
+      localStorage.setItem(LS_NEXT_ORDER_KEY, String(344643));
+      return 344643;
+    })();
+
+    // endpoints — вставлен ваш Apps Script URL
     const TELEGRAM_TOKEN = '8498848056:AAE8c_yh6rCk2paOR-2ut7vRAadH4-Lrdhs';
     const TELEGRAM_CHAT_ID = '503216481';
     const TELEGRAM_URL = `https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage`;
-    const GOOGLE_SHEETS_URL = 'https://script.google.com/macros/s/AKfycbzCEB5lcDVY1yJ3EHNdizGSfk0LgY9H_wOBok9UWkTNGYNY_z-orDm3zLvteXsKeSH7QA/exec';
+    const GOOGLE_SHEETS_URL = 'https://script.google.com/macros/s/AKfycbznV_cmjNveyISi23AeYmSBa4ecS0CAW7jjCR6oH9BJJ7Q16QkDzB2fhniQZGO127SVfg/exec';
 
     /* ========== HELPERS ========== */
     function findProductById(id){ return BOUQUETS.concat(FLOWERS,DECOR).find(p => p.id === id); }
@@ -302,12 +312,10 @@
     function escapeMd(s=''){ return String(s).replaceAll('*','\\*').replaceAll('_','\\_').replaceAll('`','\\`'); }
 
     /* ========== LOCAL STORAGE ========== */
-    const LS_CART_KEY = 'melange_cart_v1';
-    const LS_HISTORY_KEY = 'melange_orders_v1';
     function saveCartToStorage(){ localStorage.setItem(LS_CART_KEY, JSON.stringify(cart)); }
     function loadCartFromStorage(){ try{ const raw = localStorage.getItem(LS_CART_KEY); cart = raw ? JSON.parse(raw) : []; }catch(e){ cart = []; } updateCartCount(); }
+    function saveNextOrder(){ localStorage.setItem(LS_NEXT_ORDER_KEY, String(nextOrderNumber)); }
     function addOrderToHistory(order){ const arr = JSON.parse(localStorage.getItem(LS_HISTORY_KEY)||'[]'); arr.unshift(order); localStorage.setItem(LS_HISTORY_KEY, JSON.stringify(arr)); }
-
     function getHistory(){ try{ return JSON.parse(localStorage.getItem(LS_HISTORY_KEY)||'[]'); }catch(e){ return []; } }
 
     /* ========== RENDER ========== */
@@ -394,7 +402,7 @@
     }
     function closeOrder(){ document.getElementById('orderModal').style.display = 'none'; }
 
-    // short timeout helper
+    // timeout helper
     function fetchWithTimeout(resource, options = {}, timeout = 8000) {
       return Promise.race([
         fetch(resource, options),
@@ -455,8 +463,10 @@
       const date = document.getElementById('date').value;
       const message = document.getElementById('message').value.trim();
 
+      // generate order number (6 digits) and persist
       const orderNumber = String(nextOrderNumber).padStart(6,'0');
       nextOrderNumber++;
+      saveNextOrder();
 
       const itemsText = cart.map(i=>`• ${i.name} x${i.qty} = ${i.price * i.qty}₽`).join('\n');
       const total = cart.reduce((s,i)=>s + i.price * i.qty, 0);
@@ -480,25 +490,24 @@
         `💬 *Пожелания:* ${escapeMd(message || 'не указаны')}`;
 
       try{
-        // 1) ensure manager always receives telegram copy fast
+        // 1) fast notify manager via Telegram
         await sendToTelegram(telegramText);
 
-        // 2) try writing to sheets: form (no preflight) with retries
+        // 2) try writing to sheets: form-encoded with retries
         let sheetsOk = false;
         const tries = 3;
         for(let i=0;i<tries;i++){
           sheetsOk = await sendToSheetsForm(orderData, 7000);
           if(sheetsOk) break;
-          // small backoff
           await new Promise(r=>setTimeout(r, 600));
         }
 
-        // 3) if still failed, try JSON once
+        // 3) if still failed, try JSON
         if(!sheetsOk){
           sheetsOk = await sendToSheetsJson(orderData, 7000);
         }
 
-        // 4) if still failed — send explicit fallback Telegram message (manager notified)
+        // 4) if still failed — notify manager with explicit fallback message
         if(!sheetsOk){
           const fallbackText = `⚠️ [SHEETS FAILED] Автоматическая запись в Google Sheets не удалась.\n\n` +
             `🔢 № заказа: ${orderNumber}\n` +
@@ -509,13 +518,13 @@
           await sendToTelegram(fallbackText);
         }
 
-        // Save order in local history (always save client-side)
+        // Save order to local history
         const clientOrder = {
           orderNumber, createdAt: new Date().toISOString(), name, phone, email, address, date, items: itemsText, total, sheetsOk
         };
         addOrderToHistory(clientOrder);
 
-        // Show persistent success popup with sheet status
+        // Show persistent success popup
         showSuccessPopup(orderNumber, total, sheetsOk ? 'успешно' : 'не удалось — менеджер уведомлён');
 
         // reset
@@ -590,8 +599,11 @@
 
     /* ========== INIT ========== */
     document.addEventListener('DOMContentLoaded', function(){
-      // load cart from localStorage
+      // load cart + nextOrder from localStorage
       loadCartFromStorage();
+      const savedNext = localStorage.getItem(LS_NEXT_ORDER_KEY);
+      if(savedNext) nextOrderNumber = Number(savedNext);
+
       renderAll();
       onCatClick('bouquets');
       const d = new Date().toISOString().split('T')[0];
