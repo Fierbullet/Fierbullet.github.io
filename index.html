@@ -10,12 +10,13 @@
 
   <style>
     :root{
-      --accent:#C7477B;
-      --accent-dark:#8B4789;
-      --muted:#f0eff3;
-      --bg:#f8f6f9;
+      --accent-dark:#5d6f4f;   /* болотный / натуральный */
+      --accent:#8aa776;
+      --muted:#eef2ea;
+      --bg:#f6f7f4;
       --card:#ffffff;
       --text:#222;
+      --soft-shadow: 0 6px 18px rgba(93,111,79,0.06);
     }
 
     *{box-sizing:border-box;margin:0;padding:0}
@@ -25,666 +26,66 @@
       background:var(--bg);
       color:var(--text);
       -webkit-font-smoothing:antialiased;
-      -moz-osx-font-smoothing:grayscale;
       line-height:1.4;
     }
 
     /* NAV */
     nav{
-      position:sticky;
-      top:0;
-      z-index:60;
+      position:sticky; top:0; z-index:60;
       background:linear-gradient(135deg,var(--accent-dark),var(--accent));
       padding:12px 18px;
-      box-shadow:0 2px 10px rgba(0,0,0,0.08);
+      box-shadow:0 2px 10px rgba(0,0,0,0.06);
     }
     .nav-inner{
-      max-width:1200px;
-      margin:0 auto;
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:12px;
+      max-width:1200px; margin:0 auto;
+      display:flex; align-items:center; justify-content:space-between; gap:12px;
     }
     .logo{
-      color:#fff;
-      font-weight:700;
-      letter-spacing:0.6px;
-      display:flex;
-      align-items:center;
-      gap:10px;
-      font-size:1.1rem;
+      color:#fff; font-weight:700; letter-spacing:0.4px; display:flex; align-items:center; gap:10px; font-size:1.05rem;
     }
-    .logo span{font-size:1.6rem}
-    .nav-links{
-      display:flex;
-      gap:14px;
-      align-items:center;
-    }
-    .nav-links a{
-      color:#fff;
-      text-decoration:none;
-      font-weight:600;
-      opacity:0.95;
-      padding:6px 10px;
-      border-radius:8px;
-      transition:opacity .15s, background .15s;
-    }
-    .nav-links a:hover{opacity:1;background:rgba(255,255,255,0.06)}
+    .logo span{font-size:1.5rem}
+    .nav-links{display:flex; gap:14px; align-items:center;}
+    .nav-links a{ color:#fff; text-decoration:none; font-weight:600; padding:6px 10px; border-radius:8px; opacity:0.95}
+    .cart-icon{ position:relative; cursor:pointer; font-size:1.25rem; color:#fff; }
+    .cart-count{ position:absolute; top:-8px; right:-10px; background:#2f4d30; color:#fff; width:22px; height:22px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:0.78rem; }
 
-    .cart-icon{
-      position:relative;
-      cursor:pointer;
-      font-size:1.25rem;
-      color:#fff;
-    }
-    .cart-count{
-      position:absolute;
-      top:-8px; right:-10px;
-      background:#FFD700;
-      color:var(--accent-dark);
-      width:22px;height:22px;border-radius:50%;
-      display:flex;align-items:center;justify-content:center;font-weight:700;font-size:0.78rem;
-    }
-
-    /* HERO with background image (use provided filename) */
+    /* HERO - ТЕКСТ БЕЛЫЙ ПРЯМО НА ИЗОБРАЖЕНИИ (без белой подложки) */
     .hero{
-      background: linear-gradient(0deg, rgba(255,255,255,0.6), rgba(255,255,255,0.6)), url('Airbrush-Image-Enhancer-1760695648307.jpg') center/cover no-repeat;
-      min-height:340px;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      padding:48px 16px;
-      box-shadow:0 6px 24px rgba(0,0,0,0.06);
+      background: url('Airbrush-Image-Enhancer-1760695648307.jpg') center/cover no-repeat;
+      min-height:340px; display:flex; align-items:center; justify-content:center; padding:48px 16px;
+      box-shadow:0 6px 24px rgba(0,0,0,0.05);
     }
-    .hero-card{
-      max-width:1100px;
-      width:100%;
-      background:rgba(255,255,255,0.88);
-      border-radius:14px;
-      padding:28px;
-      box-shadow:0 6px 20px rgba(0,0,0,0.06);
-      display:flex;
-      gap:20px;
-      align-items:center;
-      justify-content:space-between;
-      flex-wrap:wrap;
-    }
-    .hero-text{
-      flex:1 1 420px;
+    .hero-inner{
+      width:100%; max-width:1100px; padding:28px; text-align:left;
     }
     .hero-title{
-      font-family:'Dancing Script',cursive;
-      font-size:2.6rem;
-      color:var(--text);
-      line-height:1;
+      font-family:'Dancing Script',cursive; color:#fff; font-size:2.6rem; line-height:1; text-shadow:0 6px 20px rgba(0,0,0,0.45);
+      margin-bottom:8px;
     }
     .hero-sub{
-      margin-top:8px;
-      color:#444;
-      font-size:1.05rem;
+      color:#fff; font-size:1.05rem; margin-bottom:10px; text-shadow:0 6px 18px rgba(0,0,0,0.35);
     }
-    .hero-cta{
-      display:flex;
-      gap:12px;
-      align-items:center;
+    .hero-meta{
+      color:#fff; opacity:0.95; font-weight:600; text-shadow:0 4px 12px rgba(0,0,0,0.32)
     }
+    .hero-actions{ margin-top:18px; display:flex; gap:12px; flex-wrap:wrap }
     .hero-btn{
-      background:var(--accent-dark);
-      color:white;
-      padding:12px 18px;
-      border-radius:10px;
-      font-weight:700;
-      text-decoration:none;
-      border:none;
-      cursor:pointer;
-      box-shadow:0 6px 18px rgba(139,71,137,0.12);
-    }
-    .hero-btn.secondary{
-      background:transparent;
-      color:var(--text);
-      border:1px solid rgba(0,0,0,0.06);
-      font-weight:600;
+      background:rgba(255,255,255,0.08); color:#fff; padding:10px 14px; border-radius:10px; border:1px solid rgba(255,255,255,0.08); cursor:pointer; font-weight:700;
+      backdrop-filter: blur(2px);
     }
 
-    /* CATEGORIES bar (right -> left) */
-    .categories{
-      max-width:1100px;
-      margin:18px auto 0;
-      padding:0 16px;
-      display:flex;
-      justify-content:flex-end; /* align to right */
+    /* CATEGORY TILES (теперь слева→направо, большие плашки) */
+    .category-tiles{
+      max-width:1100px; margin:18px auto 0; padding:0 16px;
+      display:grid; grid-template-columns: repeat(3, 1fr); gap:14px;
     }
-    .cats-inner{
-      display:flex;
-      gap:10px;
-      flex-direction:row-reverse; /* справа -> налево */
+    .cat-tile{
+      background:var(--card); border-radius:12px; height:92px; /* примерно половина карточки */
+      display:flex; align-items:center; padding:12px 16px; gap:12px; cursor:pointer;
+      box-shadow: var(--soft-shadow);
+      border:1px solid rgba(47,77,48,0.03);
+      transition:transform .12s, box-shadow .12s, border-color .12s;
     }
-    .cat-btn{
-      background:var(--card);
-      padding:10px 14px;
-      border-radius:12px;
-      font-weight:600;
-      border:1px solid rgba(0,0,0,0.04);
-      cursor:pointer;
-      transition:transform .12s, box-shadow .12s;
-    }
-    .cat-btn:hover{transform:translateY(-3px);box-shadow:0 8px 20px rgba(0,0,0,0.06)}
-    .cat-btn.active{
-      background:linear-gradient(90deg,var(--accent-dark),var(--accent));
-      color:white;
-      box-shadow:0 8px 24px rgba(199,71,123,0.12);
-    }
-
-    /* MAIN catalog area */
-    main{max-width:1100px;margin:22px auto;padding:0 16px 80px}
-    .catalog-section{
-      margin-top:16px;
-    }
-    .catalog-title{font-size:1.4rem;margin-bottom:12px;color:var(--text)}
-    .products-grid{
-      display:grid;
-      grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
-      gap:14px;
-    }
-
-    .product-card{
-      background:var(--card);
-      border-radius:14px;
-      padding:12px;
-      display:flex;
-      flex-direction:column;
-      gap:10px;
-      box-shadow:0 6px 18px rgba(0,0,0,0.04);
-    }
-    .product-image{
-      height:150px;border-radius:10px;background:linear-gradient(135deg,#FFEFEF,#FFF6F9);
-      display:flex;align-items:center;justify-content:center;font-size:2.4rem;
-      color:var(--accent-dark);
-    }
-    .product-info{flex:1;display:flex;flex-direction:column}
-    .product-info h3{font-size:1.05rem;margin-bottom:6px;color:var(--text)}
-    .product-price{font-weight:700;color:var(--accent);margin-bottom:6px}
-    .product-controls{display:flex;gap:8px;align-items:center;margin-top:auto}
-    .qty-label{font-size:0.95rem;color:#666}
-
-    .btn{
-      background:var(--accent-dark);
-      color:#fff;padding:10px;border-radius:10px;border:none;cursor:pointer;font-weight:700;
-    }
-    .btn.ghost{background:transparent;color:var(--accent-dark);border:1px solid rgba(139,71,137,0.15)}
-
-    /* cart & modals (copied/adapted from old) */
-    .modal{display:none;position:fixed;z-index:1200;left:0;top:0;width:100%;height:100%;background:rgba(0,0,0,0.45);overflow:auto;padding:40px 18px}
-    .modal-content{background:#fff;margin:40px auto;border-radius:12px;max-width:760px;padding:18px;box-shadow:0 12px 40px rgba(0,0,0,0.25)}
-    .modal-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
-    .close{background:none;border:none;font-size:26px;cursor:pointer;color:#666}
-    .cart-items{max-height:360px;overflow:auto;margin-bottom:12px}
-    .cart-item{display:flex;justify-content:space-between;align-items:center;padding:10px;border-radius:8px;background:var(--muted);margin-bottom:10px;border-left:4px solid var(--accent)}
-    .cart-item-info{flex:1}
-    .cart-item-name{font-weight:700;color:var(--accent-dark)}
-    .cart-item-price{color:#666;font-size:0.95rem}
-
-    .cart-total{background:linear-gradient(90deg,var(--accent-dark),var(--accent));color:white;padding:12px;border-radius:8px;font-weight:700;text-align:right}
-
-    /* order form */
-    .form-group{margin-bottom:10px}
-    .form-group label{display:block;color:var(--accent-dark);font-weight:600;margin-bottom:6px}
-    .form-group input,.form-group textarea,.form-group select{width:100%;padding:10px;border-radius:8px;border:1px solid #eee;font-size:1rem}
-    .form-submit{width:100%;padding:12px;border-radius:10px;border:none;background:var(--accent-dark);color:white;font-weight:700;cursor:pointer}
-
-    /* footer */
-    footer{background:var(--accent-dark);color:white;padding:26px;text-align:center;border-top-left-radius:16px;border-top-right-radius:16px;margin-top:36px}
-
-    /* responsiveness */
-    @media (max-width:880px){
-      .hero-card{padding:18px}
-      .hero-title{font-size:2.1rem}
-      .product-image{height:120px}
-    }
-    @media (max-width:560px){
-      .cats-inner{flex-direction:row; /* stack L->R on small screens */ }
-      .categories{justify-content:center}
-    }
-  </style>
-</head>
-<body>
-
-  <!-- NAV -->
-  <nav>
-    <div class="nav-inner">
-      <div class="logo"><span>🌸</span> Меланж</div>
-
-      <div class="nav-links">
-        <a href="#catalog" onclick="showCategory('bouquets')">Каталог</a>
-        <a href="#contacts">Контакты</a>
-        <div class="cart-icon" onclick="openCart()">
-          🛒 <div class="cart-count" id="cartCount">0</div>
-        </div>
-      </div>
-    </div>
-  </nav>
-
-  <!-- HERO (background image preserved) -->
-  <section class="hero" aria-hidden="false">
-    <div class="hero-card">
-      <div class="hero-text">
-        <div class="hero-title">Mélange — Меланж</div>
-        <div class="hero-sub">Прекрасные цветы для каждого момента жизни — букеты, элитные стебли и декор.</div>
-      </div>
-
-      <div class="hero-cta">
-        <button class="hero-btn" onclick="scrollToCatalog()">Смотреть каталог</button>
-        <button class="hero-btn secondary" onclick="openCart()">Открыть корзину</button>
-      </div>
-    </div>
-  </section>
-
-  <!-- CATEGORIES (справа -> налево) -->
-  <div class="categories">
-    <div class="cats-inner" role="tablist" aria-label="Категории">
-      <button class="cat-btn" id="cat-bouquets" onclick="onCatClick('bouquets')">Не просто букеты</button>
-      <button class="cat-btn" id="cat-decor" onclick="onCatClick('decor')">Веточки · Декор</button>
-      <button class="cat-btn" id="cat-flowers" onclick="onCatClick('flowers')">Не просто цветы</button>
-    </div>
-  </div>
-
-  <!-- MAIN -->
-  <main id="catalog">
-    <!-- Container where selected section is shown -->
-    <section class="catalog-section" id="section-bouquets" data-section="bouquets">
-      <div class="catalog-title">Букеты</div>
-      <div class="products-grid" id="bouquetsGrid"></div>
-    </section>
-
-    <section class="catalog-section" id="section-decor" data-section="decor" style="display:none;margin-top:18px">
-      <div class="catalog-title">Веточки · Декор</div>
-      <div class="products-grid" id="decorGrid"></div>
-    </section>
-
-    <section class="catalog-section" id="section-flowers" data-section="flowers" style="display:none;margin-top:18px">
-      <div class="catalog-title">Не просто цветы</div>
-      <div class="products-grid" id="flowersGrid"></div>
-    </section>
-
-    <!-- Контакты -->
-    <section class="catalog-section" id="contacts" style="margin-top:34px">
-      <div class="catalog-title">Свяжитесь с нами</div>
-      <div style="display:flex;gap:12px;flex-wrap:wrap">
-        <div style="background:#fff;padding:12px;border-radius:10px;min-width:200px">
-          <strong>Адрес</strong><div>бул. Дмитрия Донского, 6</div>
-        </div>
-        <div style="background:#fff;padding:12px;border-radius:10px;min-width:200px">
-          <strong>Телефон</strong><div><a href="tel:+79994668624">+7 (999) 466-86-24</a></div>
-        </div>
-        <div style="background:#fff;padding:12px;border-radius:10px;min-width:200px">
-          <strong>Режим работы</strong><div>Пн-Пт: 10:00 - 20:00<br>Сб-Вс: 10:00 - 18:00</div>
-        </div>
-      </div>
-    </section>
-  </main>
-
-  <!-- CART MODAL -->
-  <div id="cartModal" class="modal" onclick="modalOutsideClick(event,'cartModal')">
-    <div class="modal-content" role="dialog" aria-modal="true">
-      <div class="modal-header">
-        <h3>🛒 Корзина</h3>
-        <button class="close" onclick="closeCart()">&times;</button>
-      </div>
-      <div id="cartContent"></div>
-    </div>
-  </div>
-
-  <!-- ORDER MODAL -->
-  <div id="orderModal" class="modal" onclick="modalOutsideClick(event,'orderModal')">
-    <div class="modal-content" role="dialog" aria-modal="true">
-      <div class="modal-header">
-        <h3>📋 Оформить заказ</h3>
-        <button class="close" onclick="closeOrder()">&times;</button>
-      </div>
-
-      <div id="orderMessage"></div>
-
-      <form id="orderForm" onsubmit="submitOrder(event)">
-        <div class="form-group">
-          <label for="name">Ваше имя</label>
-          <input id="name" required placeholder="Иван Петров" />
-        </div>
-        <div class="form-group">
-          <label for="phone">Телефон</label>
-          <input id="phone" type="tel" required placeholder="+7 (999) 123-45-67" />
-        </div>
-        <div class="form-group">
-          <label for="email">Email (опционально)</label>
-          <input id="email" type="email" placeholder="your@email.com" />
-        </div>
-        <div class="form-group">
-          <label for="address">Адрес доставки</label>
-          <input id="address" required placeholder="ул. Примерная, дом 1" />
-        </div>
-        <div class="form-group">
-          <label for="date">Дата доставки</label>
-          <input id="date" type="date" required />
-        </div>
-        <div class="form-group">
-          <label for="message">Пожелания / Комментарий</label>
-          <textarea id="message" placeholder="Напишите свои пожелания..." rows="3"></textarea>
-        </div>
-
-        <button id="submitBtn" type="submit" class="form-submit">Отправить заказ</button>
-      </form>
-    </div>
-  </div>
-
-  <footer>
-    &copy; 2025 Меланж — цветочный магазин.
-  </footer>
-
-  <script>
-    /*******************************
-     * DATA (id ranges unique)     *
-     *******************************/
-    const BOUQUETS = [
-      { id: 1, name:'Романтический букет', price:2500, emoji:'🌹' },
-      { id: 2, name:'Солнечный микс', price:2000, emoji:'🌼' },
-      { id: 3, name:'Весенний праздник', price:1800, emoji:'🌷' },
-      { id: 4, name:'Композиция де люкс', price:3500, emoji:'💐' },
-      { id: 5, name:'Нежность', price:2200, emoji:'🌸' }
-    ];
-
-    const FLOWERS = [
-      { id: 100, name:'Хризантема 60 см', price:259, emoji:'🌼' },
-      { id: 101, name:'Гербера микс', price:200, emoji:'🌸' },
-      { id: 102, name:'Гиперикум микс', price:300, emoji:'🍒' },
-      { id: 103, name:'Магнум', price:350, emoji:'🌺' },
-      { id: 104, name:'Нерине Веста (светло-роз)', price:280, emoji:'🌷' },
-      { id: 105, name:'Подсолнух', price:350, emoji:'🌻' },
-      { id: 106, name:'Эустома', price:400, emoji:'💮' },
-      { id: 107, name:'Цимбидиум микс (1 шт.)', price:350, emoji:'🌿' },
-      { id: 108, name:'Роза Мондиаль 60 см', price:300, emoji:'🌹' },
-      { id: 109, name:'Роза Пинк Флойд 60 см', price:350, emoji:'🌷' },
-      { id: 110, name:'Роза Ред Наоми 60 см', price:250, emoji:'🌹' },
-      { id: 111, name:'Роза кустовая Мисти Баблз', price:550, emoji:'💐' },
-      { id: 112, name:'Роза Эквадор микс 60', price:280, emoji:'🌹' }
-    ];
-
-    const DECOR = [
-      { id: 200, name:'Эвкалипт', price:300, emoji:'🌿' },
-      { id: 201, name:'Ветка ягод', price:300, emoji:'🍓' },
-      { id: 202, name:'Гипсофила краш. Рейнбоу', price:300, emoji:'🌈' },
-      { id: 203, name:'Бруния', price:300, emoji:'🌾' },
-      { id: 204, name:'Лаванда', price:300, emoji:'💜' },
-      { id: 205, name:'Солидаго', price:250, emoji:'🌼' },
-      { id: 206, name:'Трахелиум Блю Лэйк Мичиган', price:250, emoji:'💙' },
-      { id: 207, name:'Эрингиум Супер Нова Кьюстар', price:400, emoji:'🌌' }
-    ];
-
-    /*******************************
-     * CART state (in-memory)      *
-     *******************************/
-    let cart = []; // {id,name,price,qty}
-    const cartCountEl = document.getElementById('cartCount');
-
-    function findProductById(id){
-      return BOUQUETS.concat(FLOWERS,DECOR).find(p => p.id === id);
-    }
-
-    /*******************************
-     * RENDER functions            *
-     *******************************/
-    function renderGrid(gridId, items){
-      const grid = document.getElementById(gridId);
-      grid.innerHTML = items.map(p => `
-        <div class="product-card">
-          <div class="product-image">${p.emoji}</div>
-          <div class="product-info">
-            <h3>${escapeHtml(p.name)}</h3>
-            <div class="product-price">${p.price} ₽</div>
-            <div class="product-controls">
-              <button class="btn" onclick="addToCart(${p.id})">Добавить в корзину</button>
-              <button class="btn ghost" onclick="quickBuy(${p.id})">Купить</button>
-            </div>
-          </div>
-        </div>
-      `).join('');
-    }
-
-    function escapeHtml(text){
-      return text.replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;');
-    }
-
-    function renderAll(){
-      renderGrid('bouquetsGrid', BOUQUETS);
-      renderGrid('flowersGrid', FLOWERS);
-      renderGrid('decorGrid', DECOR);
-      updateCartCount();
-    }
-
-    /*******************************
-     * CART functions              *
-     *******************************/
-    function addToCart(productId){
-      const prod = findProductById(productId);
-      if(!prod) return alert('Товар не найден');
-      const exist = cart.find(i => i.id === productId);
-      if(exist) exist.qty++;
-      else cart.push({ id:prod.id, name:prod.name, price:prod.price, qty:1 });
-      updateCartCount();
-      // небольшое уведомление вместо alert для UX
-      flashToast(`Добавлено: ${prod.name}`);
-    }
-
-    function quickBuy(productId){
-      addToCart(productId);
-      openCart();
-      // сразу открываем форму оформления
-      // setTimeout to ensure cart modal rendered
-      setTimeout(()=>openOrder(),120);
-    }
-
-    function updateCartCount(){
-      const count = cart.reduce((s,i)=>s+i.qty,0);
-      cartCountEl.textContent = count;
-    }
-
-    function openCart(){
-      const modal = document.getElementById('cartModal');
-      const content = document.getElementById('cartContent');
-      if(cart.length === 0){
-        content.innerHTML = '<div style="padding:18px;text-align:center;color:#666">Ваша корзина пуста 🛒</div>';
-      } else {
-        const total = cart.reduce((s,i)=>s+i.price*i.qty,0);
-        const itemsHtml = cart.map((item, idx) => `
-          <div class="cart-item">
-            <div class="cart-item-info">
-              <div class="cart-item-name">${escapeHtml(item.name)}</div>
-              <div class="cart-item-price">${item.price} ₽ × ${item.qty} = ${item.price * item.qty} ₽</div>
-            </div>
-            <div style="display:flex;gap:6px;align-items:center">
-              <button class="btn ghost" onclick="updateQty(${idx},-1)">-</button>
-              <div style="min-width:26px;text-align:center">${item.qty}</div>
-              <button class="btn ghost" onclick="updateQty(${idx},1)">+</button>
-              <button class="btn" style="background:#ff6b6b" onclick="removeFromCart(${idx})">Удалить</button>
-            </div>
-          </div>
-        `).join('');
-
-        content.innerHTML = `
-          <div class="cart-items">${itemsHtml}</div>
-          <div style="margin-top:10px">
-            <div class="cart-total">Итого: ${total} ₽</div>
-            <div style="margin-top:10px;display:flex;gap:10px">
-              <button class="btn" onclick="openOrder()">Оформить заказ</button>
-              <button class="btn ghost" onclick="clearCart()">Очистить</button>
-            </div>
-          </div>
-        `;
-      }
-      modal.style.display = 'block';
-    }
-
-    function closeCart(){ document.getElementById('cartModal').style.display = 'none'; }
-    function updateQty(idx, change){
-      cart[idx].qty += change;
-      if(cart[idx].qty <= 0){ cart.splice(idx,1); }
-      updateCartCount();
-      openCart();
-    }
-    function removeFromCart(idx){ cart.splice(idx,1); updateCartCount(); openCart(); }
-    function clearCart(){ cart = []; updateCartCount(); openCart(); flashToast('Корзина очищена'); }
-
-    /*******************************
-     * ORDER / send to Telegram & Sheets
-     *******************************/
-    // === replace with your values if changed ===
-    const TELEGRAM_TOKEN = '8498848056:AAE8c_yh6rCk2paOR-2ut7vRAadH4-Lrdhs';
-    const TELEGRAM_CHAT_ID = '503216481';
-    const TELEGRAM_URL = `https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage`;
-    const GOOGLE_SHEETS_URL = 'https://script.google.com/macros/s/AKfycbzzT-EopiGhcRsj1y2x_6WXAel2Fo_wct6vTWVawkfQHi3jU_L1D0H-TFm_hMJl4vA67A/exec';
-    // ===========================================
-
-    function openOrder(){
-      if(cart.length === 0){ return alert('Корзина пуста! Добавьте товары.'); }
-      closeCart();
-      const modal = document.getElementById('orderModal');
-      const dateInput = document.getElementById('date');
-      const today = new Date().toISOString().split('T')[0];
-      dateInput.setAttribute('min', today);
-      document.getElementById('orderMessage').innerHTML = '';
-      modal.style.display = 'block';
-    }
-
-    function closeOrder(){ document.getElementById('orderModal').style.display = 'none'; }
-
-    async function submitOrder(e){
-      e.preventDefault();
-      const submitBtn = document.getElementById('submitBtn');
-      submitBtn.disabled = true; submitBtn.textContent = '⏳ Отправляю...';
-
-      const name = document.getElementById('name').value.trim();
-      const phone = document.getElementById('phone').value.trim();
-      const email = document.getElementById('email').value.trim();
-      const address = document.getElementById('address').value.trim();
-      const date = document.getElementById('date').value;
-      const message = document.getElementById('message').value.trim();
-
-      const itemsText = cart.map(i=>`• ${i.name} x${i.qty} = ${i.price * i.qty}₽`).join('\n');
-      const total = cart.reduce((s,i)=>s + i.price * i.qty, 0);
-
-      const orderData = {
-        name, phone, email, address, date, items: itemsText, total, message
-      };
-
-      const telegramMessage = `🌸 *НОВЫЙ ЗАКАЗ МЕЛАНЖ* 🌸%0A%0A` +
-        `👤 *Имя:* ${escapeMd(name)}%0A` +
-        `📱 *Телефон:* ${escapeMd(phone)}%0A` +
-        `📧 *Email:* ${escapeMd(email || 'не указан')}%0A` +
-        `📍 *Адрес:* ${escapeMd(address)}%0A` +
-        `📅 *Дата доставки:* ${escapeMd(date)}%0A%0A` +
-        `📦 *ТОВАРЫ:*%0A${encodeURIComponent(itemsText)}%0A%0A` +
-        `💰 *ИТОГО: ${total} ₽*%0A%0A` +
-        `💬 *Пожелания:* ${escapeMd(message || 'не указаны')}`;
-
-      try{
-        // Telegram
-        await fetch(TELEGRAM_URL, {
-          method:'POST',
-          headers:{ 'Content-Type':'application/json' },
-          body: JSON.stringify({ chat_id: TELEGRAM_CHAT_ID, text: decodeURIComponent(telegramMessage), parse_mode: 'Markdown' })
-        });
-
-        // Google Sheets
-        await fetch(GOOGLE_SHEETS_URL, {
-          method:'POST',
-          headers:{ 'Content-Type':'application/json' },
-          body: JSON.stringify(orderData)
-        });
-
-        // Success message in modal
-        const messageDiv = document.getElementById('orderMessage');
-        messageDiv.innerHTML = `
-          <div style="background:#4caf50;color:#fff;padding:12px;border-radius:8px;margin-bottom:10px">
-            ✅ Заказ успешно оформлен! Спасибо, ${escapeHtml(name)}.
-          </div>
-          <div style="background:#fafafa;padding:12px;border-radius:8px">
-            <strong>Детали:</strong><br>${itemsText.replaceAll('•','✓')}<br><strong>Сумма:</strong> ${total} ₽
-          </div>
-        `;
-
-        // reset
-        document.getElementById('orderForm').reset();
-        cart = []; updateCartCount();
-
-        setTimeout(()=>{ closeOrder(); document.getElementById('orderMessage').innerHTML=''; }, 4000);
-      }catch(err){
-        console.error('Order send error',err);
-        document.getElementById('orderMessage').innerHTML = `<div style="background:#ff6b6b;color:white;padding:10px;border-radius:8px">❌ Ошибка при отправке. Позвоните: +7 (999) 466-86-24</div>`;
-      }finally{
-        submitBtn.disabled = false; submitBtn.textContent = 'Отправить заказ';
-      }
-    }
-
-    function escapeMd(s=''){ return s.replaceAll('*','\\*').replaceAll('_','\\_').replaceAll('`','\\`'); }
-
-    /*******************************
-     * CATEGORY tabs behavior      *
-     *******************************/
-    function onCatClick(cat){
-      // cat in ['bouquets','decor','flowers']
-      document.querySelectorAll('.cat-btn').forEach(b=>b.classList.remove('active'));
-      document.getElementById('cat-'+(cat==='bouquets'?'bouquets': (cat==='decor'?'decor':'flowers'))).classList.add('active');
-
-      document.querySelectorAll('[data-section]').forEach(sec=>{
-        sec.style.display = sec.dataset.section === cat ? '' : 'none';
-      });
-
-      // scroll to catalog region
-      setTimeout(()=> scrollToCatalog(), 80);
-    }
-
-    function showCategory(cat){ onCatClick(cat); } // alias
-
-    function scrollToCatalog(){
-      const el = document.getElementById('catalog');
-      if(!el) return;
-      window.scrollTo({ top: el.offsetTop - 18, behavior:'smooth' });
-    }
-
-    // default: show bouquets
-    document.addEventListener('DOMContentLoaded', function(){
-      renderAll();
-      onCatClick('bouquets');
-
-      // set today min for date input initially (helps some browsers)
-      const d = new Date().toISOString().split('T')[0];
-      const dateInput = document.getElementById('date');
-      if(dateInput) dateInput.setAttribute('min', d);
-    });
-
-    /*******************************
-     * small helpers                *
-     *******************************/
-    function modalOutsideClick(e, id){
-      const m = document.getElementById(id);
-      if(e.target === m) m.style.display = 'none';
-    }
-
-    // Tiny toast
-    function flashToast(text){
-      const t = document.createElement('div');
-      t.textContent = text;
-      Object.assign(t.style,{
-        position:'fixed',right:'16px',bottom:'16px',background:'#222',color:'#fff',padding:'10px 14px',borderRadius:'10px',zIndex:2000,boxShadow:'0 8px 20px rgba(0,0,0,0.2)',opacity:0,transition:'opacity .2s'
-      });
-      document.body.appendChild(t);
-      requestAnimationFrame(()=>t.style.opacity=1);
-      setTimeout(()=>{ t.style.opacity=0; setTimeout(()=>t.remove(),300) },1800);
-    }
-  </script>
-
-  <!-- Подключай форму отправки заказа на старый endpoint (Google Apps Script) и Telegram — использованы те же URL/токен, что в старой версии -->
-  <script>
-    // Вспомогательный доступ к submitOrder — уже выше связан в форме атрибуте onsubmit
-  </script>
-</body>
-</html>
+    .cat-tile:hover{ transform:translateY(-4px); box-shadow:0 12px 30px rgba(45,73,44,0.06); }
+    .cat-tile h3{ font-size:1.05rem; color:var(--accent-dark); margin:0; font-weight:700;}
+    .cat-tile p{ font-size:0.92rem; color:#6b6b6b;
