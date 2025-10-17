@@ -42,6 +42,146 @@
             from { opacity: 0; }
             to { opacity: 1; }
         }
+        /* Каталог */
+        .catalog {
+            padding: 3rem 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .catalog h2 {
+            text-align: center;
+            margin-bottom: 2rem;
+            color: #8B4789;
+        }
+        .products {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+        }
+        .product-card {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 1.5rem;
+            text-align: center;
+            transition: transform 0.3s;
+        }
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        .product-card h3 {
+            color: #C7477B;
+            margin-bottom: 0.5rem;
+        }
+        .product-card .price {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #8B4789;
+            margin: 1rem 0;
+        }
+        .product-card button {
+            background: #C7477B;
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        .product-card button:hover {
+            background: #8B4789;
+        }
+        /* Корзина */
+        .cart {
+            padding: 3rem 2rem;
+            background: #f9f9f9;
+        }
+        .cart .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .cart h2 {
+            text-align: center;
+            margin-bottom: 2rem;
+            color: #8B4789;
+        }
+        #cart-items {
+            background: white;
+            padding: 2rem;
+            border-radius: 8px;
+            min-height: 200px;
+        }
+        .cart-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0;
+            border-bottom: 1px solid #eee;
+        }
+        .cart-total {
+            text-align: right;
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #8B4789;
+            margin-top: 1rem;
+        }
+        /* Форма заказа */
+        .order-form {
+            padding: 3rem 2rem;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        .order-form h2 {
+            text-align: center;
+            margin-bottom: 2rem;
+            color: #8B4789;
+        }
+        .order-form input, .order-form textarea {
+            width: 100%;
+            padding: 0.75rem;
+            margin-bottom: 1rem;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .order-form button {
+            width: 100%;
+            background: #C7477B;
+            color: white;
+            border: none;
+            padding: 1rem;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1.1rem;
+            transition: background 0.3s;
+        }
+        .order-form button:hover {
+            background: #8B4789;
+        }
+        /* Контакты */
+        .contacts {
+            padding: 3rem 2rem;
+            background: #f9f9f9;
+        }
+        .contacts .container {
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: center;
+        }
+        .contacts h2 {
+            margin-bottom: 2rem;
+            color: #8B4789;
+        }
+        .contact-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+        .contact-item {
+            padding: 1.5rem;
+            background: white;
+            border-radius: 8px;
+        }
     </style>
 </head>
 <body>
@@ -53,6 +193,133 @@
     
     <section class="hero">
         <h1>Добро пожаловать в Меланж</h1>
+        <p>Лучшие цветы для особых моментов</p>
     </section>
+
+    <section class="catalog" id="catalog">
+        <h2>Каталог</h2>
+        <div class="products">
+            <div class="product-card">
+                <h3>Розы красные</h3>
+                <p>Классические красные розы для любимых</p>
+                <div class="price">1500₽</div>
+                <button onclick="addToCart('Розы красные', 1500)">Добавить в корзину</button>
+            </div>
+            <div class="product-card">
+                <h3>Букет тюльпанов</h3>
+                <p>Нежные весенние тюльпаны</p>
+                <div class="price">1200₽</div>
+                <button onclick="addToCart('Букет тюльпанов', 1200)">Добавить в корзину</button>
+            </div>
+            <div class="product-card">
+                <h3>Лилии белые</h3>
+                <p>Элегантные белые лилии</p>
+                <div class="price">1800₽</div>
+                <button onclick="addToCart('Лилии белые', 1800)">Добавить в корзину</button>
+            </div>
+            <div class="product-card">
+                <h3>Пионы розовые</h3>
+                <p>Роскошные розовые пионы</p>
+                <div class="price">2000₽</div>
+                <button onclick="addToCart('Пионы розовые', 2000)">Добавить в корзину</button>
+            </div>
+        </div>
+    </section>
+
+    <section class="cart" id="cart">
+        <div class="container">
+            <h2>Корзина</h2>
+            <div id="cart-items">
+                <p>Корзина пуста</p>
+            </div>
+            <div class="cart-total" id="cart-total"></div>
+        </div>
+    </section>
+
+    <section class="order-form" id="order">
+        <h2>Оформить заказ</h2>
+        <form onsubmit="submitOrder(event)">
+            <input type="text" placeholder="Ваше имя" required>
+            <input type="tel" placeholder="Телефон" required>
+            <input type="email" placeholder="Email" required>
+            <textarea placeholder="Адрес доставки" rows="3" required></textarea>
+            <textarea placeholder="Комментарий к заказу" rows="3"></textarea>
+            <button type="submit">Отправить заказ</button>
+        </form>
+    </section>
+
+    <section class="contacts" id="contacts">
+        <div class="container">
+            <h2>Контакты</h2>
+            <div class="contact-info">
+                <div class="contact-item">
+                    <h3>Телефон</h3>
+                    <p>+7 (999) 123-45-67</p>
+                </div>
+                <div class="contact-item">
+                    <h3>Email</h3>
+                    <p>melange@flowers.ru</p>
+                </div>
+                <div class="contact-item">
+                    <h3>Адрес</h3>
+                    <p>г. Москва, ул. Цветочная, д. 15</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        let cart = [];
+
+        function addToCart(name, price) {
+            cart.push({name, price});
+            updateCart();
+        }
+
+        function updateCart() {
+            const cartItems = document.getElementById('cart-items');
+            const cartTotal = document.getElementById('cart-total');
+            
+            if (cart.length === 0) {
+                cartItems.innerHTML = '<p>Корзина пуста</p>';
+                cartTotal.innerHTML = '';
+                return;
+            }
+
+            let html = '';
+            let total = 0;
+            
+            cart.forEach((item, index) => {
+                html += `
+                    <div class="cart-item">
+                        <span>${item.name}</span>
+                        <span>${item.price}₽</span>
+                        <button onclick="removeFromCart(${index})" style="background: #C7477B; color: white; border: none; padding: 0.5rem 1rem; border-radius: 5px; cursor: pointer;">Удалить</button>
+                    </div>
+                `;
+                total += item.price;
+            });
+            
+            cartItems.innerHTML = html;
+            cartTotal.innerHTML = `Итого: ${total}₽`;
+        }
+
+        function removeFromCart(index) {
+            cart.splice(index, 1);
+            updateCart();
+        }
+
+        function submitOrder(event) {
+            event.preventDefault();
+            if (cart.length === 0) {
+                alert('Корзина пуста!');
+                return;
+            }
+            alert('Заказ отправлен! Мы свяжемся с вами в ближайшее время.');
+            cart = [];
+            updateCart();
+            event.target.reset();
+        }
+    </script>
 </body>
 </html>
