@@ -227,8 +227,8 @@ let nextOrderNumber = (()=>{ const raw=localStorage.getItem(LS_NEXT_ORDER_KEY); 
 const TELEGRAM_TOKEN='8498848056:AAE8c_yh6rCk2paOR-2ut7vRAadH4-Lrdhs';
 const TELEGRAM_CHAT_ID='503216481';
 const TELEGRAM_URL=`https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage`;
-// <-- Замените на ваш рабочий URL web app из Apps Script (тот же, что вы публиковали)
-const GOOGLE_SHEETS_URL='https://script.google.com/macros/s/AKfycbw12n66qDRTJtk-ODM85ynxuuWTGGMAKmpvv5L-WRddMDcBuYXW1oY2czfoO9HqjjTXsQ/exec';
+// ВАЖНО: замените на ваш рабочий URL web app из Apps Script (тот же, что вы публиковали)
+const GOOGLE_SHEETS_URL='https://script.google.com/macros/s/AKfycbwHXZn4FUvU8ds5vCUhOPjB-4oq7zVUWksTHkGcHZkZ1lMWRrf1Vb0fZbeA0f7kYj_lwA/exec';
 
 /* ========== HELPERS ========== */
 function findProductById(id){ return BOUQUETS.concat(FLOWERS,DECOR).find(p=>p.id===id) }
@@ -274,7 +274,9 @@ function updateQty(idx,change){ cart[idx].qty += change; if(cart[idx].qty<=0) ca
 function removeFromCart(idx){ cart.splice(idx,1); updateCartCount(); saveCartToStorage(); openCart() }
 function clearCart(){ cart=[]; updateCartCount(); saveCartToStorage(); openCart(); flashToast('Корзина очищена') }
 
-/* ========== ORDER FLOW (improved hidden form + fallback) ========== */
+/* ========== ORDER FLOW ========== */
+let orderSubmitting = false; // блокировка повторной отправки
+
 function openOrder(){ if(cart.length===0) return alert('Корзина пуста! Добавьте товары.'); closeCart(); const modal=document.getElementById('orderModal'); const dateInput=document.getElementById('date'); const today=new Date().toISOString().split('T')[0]; dateInput.setAttribute('min',today); document.getElementById('orderError').innerHTML=''; modal.style.display='block' }
 function closeOrder(){ document.getElementById('orderModal').style.display='none' }
 
@@ -289,10 +291,9 @@ async function sendToTelegram(text){
   } catch(e){ console.error('Telegram send error',e); return false; }
 }
 
-// Improved: set acceptCharset, enctype, ensure iframe is created with src, add small fetch(no-cors) fallback
+// только form->iframe (без fetch fallback) — чтобы не было двойной записи
 function submitToSheetsViaForm(data){
   try {
-    // create hidden iframe (ensure about:blank)
     let iframe = document.getElementById('hidden_iframe');
     if(!iframe){
       iframe = document.createElement('iframe');
@@ -305,7 +306,6 @@ function submitToSheetsViaForm(data){
       iframe.src = 'about:blank';
     }
 
-    // create form
     const form = document.createElement('form');
     form.style.display='none';
     form.method='POST';
@@ -314,7 +314,6 @@ function submitToSheetsViaForm(data){
     form.acceptCharset = 'UTF-8';
     form.enctype = 'application/x-www-form-urlencoded';
 
-    // add inputs in stable predictable order (helps Apps Script mapping/debug)
     const orderFields = ['name','phone','email','address','date','items','total','message','orderTimestamp','orderNumber'];
     orderFields.forEach(k=>{
       const input = document.createElement('input');
@@ -325,23 +324,8 @@ function submitToSheetsViaForm(data){
     });
 
     document.body.appendChild(form);
-
-    // submit the form -> reliable in most browsers
     form.submit();
-
-    // cleanup later
     setTimeout(()=>{ try{ form.remove(); }catch(e){} }, 5000);
-
-    // BONUS fallback: also try a fetch with no-cors (opaque) so that if iframe is blocked, server still receives something
-    // (fetch with mode:'no-cors' will succeed silently in many browsers but response opaque)
-    try {
-      fetch(GOOGLE_SHEETS_URL, {
-        method: 'POST',
-        mode: 'no-cors',
-        headers: { 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8' },
-        body: new URLSearchParams(Object.fromEntries(orderFields.map(k=>[k, data[k] === undefined ? '' : String(data[k])])))
-      }).catch(()=>{/*ignore*/});
-    } catch(e){ /*ignore*/ }
 
     return true;
   } catch (err){
@@ -352,6 +336,9 @@ function submitToSheetsViaForm(data){
 
 async function submitOrder(e){
   e.preventDefault();
+  if (orderSubmitting) return; // защита от двойного клика
+  orderSubmitting = true;
+
   const submitBtn = document.getElementById('submitBtn');
   submitBtn.disabled = true; submitBtn.textContent = '⏳ Отправляю...';
   document.getElementById('orderError').innerHTML = '';
@@ -370,9 +357,7 @@ async function submitOrder(e){
   const total = cart.reduce((s,i)=>s + i.price * i.qty, 0);
 
   const timestamp = new Date();
-  // format ISO for our local history, and pass readable timestamp string for Sheets
-  const orderTimestamp = timestamp.toISOString(); // send full ISO; Apps Script can reformat for sheet if needed
-  const orderTimestampForSheet = (new Date(timestamp)).toLocaleString(); // readable, fallback
+  const orderTimestampForSheet = (new Date(timestamp)).toLocaleString();
 
   const orderData = {
     orderNumber,
@@ -380,7 +365,7 @@ async function submitOrder(e){
     items: itemsText,
     total: String(total),
     message,
-    orderTimestamp: orderTimestampForSheet // we'll send readable timestamp as a field
+    orderTimestamp: orderTimestampForSheet
   };
 
   const telegramText = `🌸 *НОВЫЙ ЗАКАЗ МЕЛАНЖ* 🌸\n\n` +
@@ -395,23 +380,20 @@ async function submitOrder(e){
     `💬 *Пожелания:* ${escapeMd(message || 'не указаны')}`;
 
   try{
-    // 1) Send Telegram (best-effort)
-    await sendToTelegram(telegramText);
+    // 1) Попытка отправить уведомление в Telegram (если не получится — продолжим)
+    try { await sendToTelegram(telegramText); } catch(e){ console.warn('telegram fail', e); }
 
-    // 2) Submit to Google Sheets via hidden form (improved)
-    const sent = submitToSheetsViaForm({
-      ...orderData,
-      orderTimestamp: orderTimestampForSheet // human readable
-    });
+    // 2) Отправка в Google Sheets (form->iframe) — единственный метод здесь
+    const sent = submitToSheetsViaForm(orderData);
 
-    // 3) Save local history
+    // 3) Сохраняем локально историю
     const clientOrder = { orderNumber, createdAt: new Date().toISOString(), name, phone, email, address, date, items: itemsText, total, sheetsOk: Boolean(sent) };
     addOrderToHistory(clientOrder);
 
-    // 4) Show persistent success popup
+    // 4) Показать успешное окно пользователю
     showSuccessPopup(orderNumber, total, sent ? 'отправлено' : 'попытка отправки');
 
-    // reset UI
+    // сброс UI
     document.getElementById('orderForm').reset();
     cart=[]; updateCartCount(); saveCartToStorage();
     closeOrder();
@@ -420,7 +402,8 @@ async function submitOrder(e){
     console.error('submitOrder error',err);
     document.getElementById('orderError').innerHTML = `<div style="background:#ffeded;color:#900;padding:10px;border-radius:6px">❌ Ошибка при отправке. Позвоните: +7 (999) 466-86-24</div>`;
   } finally {
-    submitBtn.disabled=false; submitBtn.textContent='Отправить заказ';
+    // оставляем кнопку отключённой короткое время, чтобы не было дубликатов случайно
+    setTimeout(()=>{ orderSubmitting = false; submitBtn.disabled=false; submitBtn.textContent='Отправить заказ'; }, 2200);
   }
 }
 
