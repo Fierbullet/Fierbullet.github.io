@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Mélange — Меланж — Цветочный магазин</title>
 
-  <!-- Шрифты -->
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
 
   <style>
@@ -72,11 +71,10 @@
     .cart-total{background:linear-gradient(90deg,var(--accent-dark),var(--accent));color:white;padding:12px;border-radius:8px;font-weight:700;text-align:right}
 
     .form-group{margin-bottom:10px}
-    /* inputs: Helvetica fallback, placeholders per request */
     .form-input{width:100%;padding:10px;border-radius:8px;border:1px solid #eee;font-size:1rem;font-family:Helvetica, 'Arial', sans-serif}
     .form-textarea{width:100%;padding:10px;border-radius:8px;border:1px solid #eee;font-size:1rem;font-family:Helvetica, 'Arial', sans-serif;min-height:80px;resize:vertical}
 
-    /* SUCCESS POPUP (отдельный модальный success) */
+    /* SUCCESS POPUP */
     .success-modal{display:none;position:fixed;z-index:1300;left:0;top:0;width:100%;height:100%;background:rgba(0,0,0,0.35);align-items:center;justify-content:center;padding:24px}
     .success-card{background:#fff;border-radius:14px;padding:18px;max-width:640px;width:100%;box-shadow:0 18px 60px rgba(0,0,0,0.16);position:relative}
     .success-close{position:absolute;right:12px;top:8px;background:none;border:none;font-size:20px;cursor:pointer;color:#666}
@@ -84,7 +82,6 @@
 
     footer{background:var(--accent-dark);color:white;padding:26px;text-align:center;border-top-left-radius:16px;border-top-right-radius:16px;margin-top:36px}
 
-    /* responsive */
     @media (max-width:980px){ .category-tiles{grid-template-columns:repeat(3,1fr);gap:10px} .cat-tile{height:86px} }
     @media (max-width:700px){ .hero-title{font-size:2.1rem} .category-tiles{grid-template-columns:1fr} .cat-tile{height:86px} .product-image{height:140px} .modal-content{margin:20px 8px} .success-card{margin:0 12px} }
   </style>
@@ -195,11 +192,9 @@
         <button class="close" onclick="closeOrder()">&times;</button>
       </div>
 
-      <!-- место для ошибок -->
       <div id="orderError" style="margin-bottom:8px"></div>
 
       <form id="orderForm">
-        <!-- placeholders вместо внешних лейблов -->
         <div class="form-group">
           <input id="name" class="form-input" placeholder="Ваше имя" required />
         </div>
@@ -213,14 +208,12 @@
           <input id="address" class="form-input" placeholder="ул. дом. эт. кв." required />
         </div>
         <div class="form-group">
-          <!-- type=date + placeholder (некоторые браузеры не показывают placeholder для date) -->
           <input id="date" class="form-input" type="date" placeholder="дд.мм.гггг" required />
         </div>
         <div class="form-group">
           <textarea id="message" class="form-textarea" placeholder="Напишите свои пожелания..."></textarea>
         </div>
 
-        <!-- кнопка как на карточках -->
         <div style="margin-top:6px">
           <button id="submitBtn" type="submit" class="btn">Отправить заказ</button>
         </div>
@@ -228,13 +221,11 @@
     </div>
   </div>
 
-  <!-- SUCCESS POPUP (отдельное, не закрывается автоматически) -->
+  <!-- SUCCESS POPUP -->
   <div id="successModal" class="success-modal" aria-hidden="true">
     <div class="success-card" role="dialog" aria-modal="true" aria-labelledby="successTitle">
       <button class="success-close" onclick="closeSuccess()">✕</button>
-      <div class="success-text" id="successContent">
-        <!-- наполнение через JS -->
-      </div>
+      <div class="success-text" id="successContent"></div>
     </div>
   </div>
 
@@ -286,8 +277,8 @@
       return BOUQUETS.concat(FLOWERS,DECOR).find(p => p.id === id);
     }
 
-    /* ========== RENDER ========== */
     function escapeHtml(text){ return String(text).replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;'); }
+    function escapeMd(s=''){ return String(s).replaceAll('*','\\*').replaceAll('_','\\_').replaceAll('`','\\`'); }
 
     function renderGrid(gridId, items){
       const grid = document.getElementById(gridId);
@@ -307,7 +298,7 @@
 
     function renderAll(){ renderGrid('bouquetsGrid',BOUQUETS); renderGrid('flowersGrid',FLOWERS); renderGrid('decorGrid',DECOR); updateCartCount(); }
 
-    /* ========== CART ========== */
+    /* CART */
     function addToCart(productId){
       const prod = findProductById(productId);
       if(!prod) return alert('Товар не найден');
@@ -359,7 +350,7 @@
     function removeFromCart(idx){ cart.splice(idx,1); updateCartCount(); openCart(); }
     function clearCart(){ cart = []; updateCartCount(); openCart(); flashToast('Корзина очищена'); }
 
-    /* ========== ORDER (Telegram + Google Sheets via URLSearchParams) ========== */
+    /* ORDER + надежная отправка в Google Sheets (form -> json -> fallback to Telegram) */
     const TELEGRAM_TOKEN = '8498848056:AAE8c_yh6rCk2paOR-2ut7vRAadH4-Lrdhs';
     const TELEGRAM_CHAT_ID = '503216481';
     const TELEGRAM_URL = `https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage`;
@@ -377,16 +368,18 @@
     }
     function closeOrder(){ document.getElementById('orderModal').style.display = 'none'; }
 
-    // show success popup (persistent until user closes)
-    function showSuccessPopup(orderNumber, name, itemsText, total){
+    function showSuccessPopup(orderNumber, total, sheetsStatus){
       const modal = document.getElementById('successModal');
       const content = document.getElementById('successContent');
       content.innerHTML = `
         <div style="font-weight:700;margin-bottom:8px">Спасибо за ваш заказ!</div>
         <div style="margin-bottom:10px">Мы уже собираем для вас самый свежий и красивый букет. Ожидайте звонка от нашего менеджера в ближайшее время для уточнения всех деталей.</div>
-        <div style="background:#fbfff8;padding:10px;border-radius:8px;border:1px solid rgba(93,111,79,0.04)">
+        <div style="background:#fbfff8;padding:10px;border-radius:8px;border:1px solid rgba(93,111,79,0.04);margin-bottom:10px">
           <strong>№ заказа:</strong> ${orderNumber}<br>
           <strong>Сумма:</strong> ${total} ₽
+        </div>
+        <div style="font-size:0.95rem;color:#444">
+          Статус записи в Google Sheets: <strong>${sheetsStatus}</strong>.
         </div>
       `;
       modal.style.display = 'flex';
@@ -396,6 +389,59 @@
       const modal = document.getElementById('successModal');
       modal.style.display = 'none';
       modal.setAttribute('aria-hidden','true');
+    }
+
+    async function sendToTelegram(text){
+      try{
+        const res = await fetch(TELEGRAM_URL, {
+          method:'POST',
+          headers:{ 'Content-Type':'application/json' },
+          body: JSON.stringify({ chat_id: TELEGRAM_CHAT_ID, text, parse_mode: 'Markdown' })
+        });
+        return res.ok;
+      } catch(e){
+        console.error('Telegram send error', e);
+        return false;
+      }
+    }
+
+    async function sendToSheetsForm(data){
+      try{
+        const params = new URLSearchParams();
+        Object.keys(data).forEach(k => params.append(k, data[k] === undefined ? '' : String(data[k])));
+        const res = await fetch(GOOGLE_SHEETS_URL, { method:'POST', body: params });
+        // try parse JSON response if any
+        let ok = res.ok;
+        try {
+          const t = await res.text();
+          if(t){
+            try {
+              const j = JSON.parse(t);
+              if(j && j.status && j.status.toLowerCase()==='ok') ok = ok && true;
+            } catch(_) {
+              // response not json — still accept res.ok
+            }
+          }
+        } catch(_) {}
+        return ok;
+      } catch(e){
+        console.warn('Sheets form send error', e);
+        return false;
+      }
+    }
+
+    async function sendToSheetsJson(data){
+      try{
+        const res = await fetch(GOOGLE_SHEETS_URL, {
+          method:'POST',
+          headers:{ 'Content-Type':'application/json' },
+          body: JSON.stringify(data)
+        });
+        return res.ok;
+      } catch(e){
+        console.warn('Sheets json send error', e);
+        return false;
+      }
     }
 
     async function submitOrder(e){
@@ -411,14 +457,20 @@
       const date = document.getElementById('date').value;
       const message = document.getElementById('message').value.trim();
 
-      // order number (6 digits) starting from 344643
       const orderNumber = String(nextOrderNumber).padStart(6,'0');
       nextOrderNumber++;
 
       const itemsText = cart.map(i=>`• ${i.name} x${i.qty} = ${i.price * i.qty}₽`).join('\n');
       const total = cart.reduce((s,i)=>s + i.price * i.qty, 0);
 
-      // prepare payloads
+      const orderData = {
+        orderNumber, name, phone, email, address, date,
+        items: itemsText,
+        total: String(total),
+        message
+      };
+
+      // Telegram text (main)
       const telegramText = `🌸 *НОВЫЙ ЗАКАЗ МЕЛАНЖ* 🌸\n\n` +
         `🔢 *№ заказа:* ${orderNumber}\n` +
         `👤 *Имя:* ${escapeMd(name)}\n` +
@@ -430,69 +482,59 @@
         `💰 *ИТОГО: ${total} ₽*\n\n` +
         `💬 *Пожелания:* ${escapeMd(message || 'не указаны')}`;
 
-      // Google Sheets: send as form params so Apps Script sees e.parameter.orderNumber etc.
-      const formData = new URLSearchParams();
-      formData.append('orderNumber', orderNumber);
-      formData.append('name', name);
-      formData.append('phone', phone);
-      formData.append('email', email);
-      formData.append('address', address);
-      formData.append('date', date);
-      formData.append('items', itemsText);
-      formData.append('total', String(total));
-      formData.append('message', message);
-
       try{
-        // send to Telegram
-        await fetch(TELEGRAM_URL, {
-          method:'POST',
-          headers:{ 'Content-Type':'application/json' },
-          body: JSON.stringify({ chat_id: TELEGRAM_CHAT_ID, text: telegramText, parse_mode: 'Markdown' })
-        });
+        // 1) Telegram first (guarantee manager sees order)
+        const telOk = await sendToTelegram(telegramText);
 
-        // send to Google Sheets as form
-        await fetch(GOOGLE_SHEETS_URL, {
-          method: 'POST',
-          body: formData
-          // no custom headers — browser will set application/x-www-form-urlencoded
-        });
+        // 2) try send to Sheets as form
+        let sheetsOk = await sendToSheetsForm(orderData);
 
-        // success: close order modal and show persistent success popup
-        closeOrder();
-        showSuccessPopup(orderNumber, name, itemsText, total);
+        // 3) if not ok, try JSON fallback
+        if(!sheetsOk){
+          sheetsOk = await sendToSheetsJson(orderData);
+        }
 
-        // reset form & cart
+        // 4) If still not ok, notify via Telegram a special message so manager gets a copy
+        if(!sheetsOk){
+          const fallbackText = `⚠️ [SHEETS FAILED] Автоматическая запись в Google Sheets не удалась.\n\n` +
+            `🔢 № заказа: ${orderNumber}\n` +
+            `Имя: ${escapeMd(name)}\nТел: ${escapeMd(phone)}\nАдрес: ${escapeMd(address)}\nДата: ${escapeMd(date)}\nСумма: ${total} ₽\n\n` +
+            `ТОВАРЫ:\n${itemsText}\n\n` +
+            `Пожелания: ${escapeMd(message || 'не указаны')}\n\n` +
+            `Проверьте деплой Apps Script / доступы и внесите заказ вручную в таблицу.`;
+          await sendToTelegram(fallbackText);
+        }
+
+        // Show persistent success popup and include sheet status
+        showSuccessPopup(orderNumber, total, sheetsOk ? 'успешно' : 'не удалось — менеджер уведомлён');
+
+        // reset
         document.getElementById('orderForm').reset();
         cart = []; updateCartCount();
+        closeOrder();
       } catch(err){
-        console.error('Order send error', err);
-        const errDiv = document.getElementById('orderError');
-        errDiv.innerHTML = `<div style="background:#ffeded;color:#900;padding:10px;border-radius:6px">❌ Ошибка при отправке. Позвоните: +7 (999) 466-86-24</div>`;
+        console.error('submitOrder error', err);
+        document.getElementById('orderError').innerHTML = `<div style="background:#ffeded;color:#900;padding:10px;border-radius:6px">❌ Ошибка при отправке. Позвоните: +7 (999) 466-86-24</div>`;
       } finally {
         submitBtn.disabled = false; submitBtn.textContent = 'Отправить заказ';
       }
     }
 
-    function escapeMd(s=''){ return String(s).replaceAll('*','\\*').replaceAll('_','\\_').replaceAll('`','\\`'); }
-
-    /* ========== CATEGORIES ========== */
+    /* categories + helpers */
     function onCatClick(cat){
       document.querySelectorAll('.cat-tile').forEach(t=>t.style.borderColor='rgba(47,77,48,0.03)');
       if(cat==='bouquets') document.getElementById('tile-bouquets').style.borderColor='rgba(93,111,79,0.18)';
       if(cat==='decor') document.getElementById('tile-decor').style.borderColor='rgba(93,111,79,0.18)';
       if(cat==='flowers') document.getElementById('tile-flowers').style.borderColor='rgba(93,111,79,0.18)';
       document.querySelectorAll('[data-section]').forEach(sec => { sec.style.display = sec.dataset.section === cat ? '' : 'none'; });
-      // only scroll into view on mobile
       if(window.innerWidth <= 700){ setTimeout(()=>scrollToCatalog(), 80); }
     }
     function showCategory(cat){ onCatClick(cat); }
     function scrollToCatalog(){ const el=document.getElementById('catalog'); if(!el) return; window.scrollTo({top:el.offsetTop-16, behavior:'smooth'}); }
 
-    /* ========== helpers ========== */
     function modalOutsideClick(e, id){ const m=document.getElementById(id); if(e.target === m) m.style.display='none'; }
     function flashToast(text){ const t=document.createElement('div'); t.textContent=text; Object.assign(t.style,{position:'fixed',right:'16px',bottom:'16px',background:'#2f4d30',color:'#fff',padding:'10px 14px',borderRadius:'10px',zIndex:2000,opacity:0,transition:'opacity .18s'}); document.body.appendChild(t); requestAnimationFrame(()=>t.style.opacity=1); setTimeout(()=>{ t.style.opacity=0; setTimeout(()=>t.remove(),260) },1400); }
 
-    /* ========== INIT ========== */
     document.addEventListener('DOMContentLoaded', function(){
       renderAll();
       onCatClick('bouquets');
