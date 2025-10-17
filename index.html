@@ -227,6 +227,7 @@ let nextOrderNumber = (()=>{ const raw=localStorage.getItem(LS_NEXT_ORDER_KEY); 
 const TELEGRAM_TOKEN='8498848056:AAE8c_yh6rCk2paOR-2ut7vRAadH4-Lrdhs';
 const TELEGRAM_CHAT_ID='503216481';
 const TELEGRAM_URL=`https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage`;
+// <-- Замените на ваш рабочий URL web app из Apps Script (тот же, что вы публиковали)
 const GOOGLE_SHEETS_URL='https://script.google.com/macros/s/AKfycbwh2A-sQZm3BktehprzH4tsIFPn6aSuISpKUwIZxNsklWVm4Ku_KskPaZv7GSqk_cX8PQ/exec';
 
 /* ========== HELPERS ========== */
@@ -273,7 +274,7 @@ function updateQty(idx,change){ cart[idx].qty += change; if(cart[idx].qty<=0) ca
 function removeFromCart(idx){ cart.splice(idx,1); updateCartCount(); saveCartToStorage(); openCart() }
 function clearCart(){ cart=[]; updateCartCount(); saveCartToStorage(); openCart(); flashToast('Корзина очищена') }
 
-/* ========== ORDER FLOW (fixed CORS using form->iframe) ========== */
+/* ========== ORDER FLOW (improved hidden form + fallback) ========== */
 function openOrder(){ if(cart.length===0) return alert('Корзина пуста! Добавьте товары.'); closeCart(); const modal=document.getElementById('orderModal'); const dateInput=document.getElementById('date'); const today=new Date().toISOString().split('T')[0]; dateInput.setAttribute('min',today); document.getElementById('orderError').innerHTML=''; modal.style.display='block' }
 function closeOrder(){ document.getElementById('orderModal').style.display='none' }
 
@@ -288,28 +289,65 @@ async function sendToTelegram(text){
   } catch(e){ console.error('Telegram send error',e); return false; }
 }
 
-// key change: submit order to Google Sheets via hidden form + iframe (no CORS)
+// Improved: set acceptCharset, enctype, ensure iframe is created with src, add small fetch(no-cors) fallback
 function submitToSheetsViaForm(data){
-  // create hidden iframe if not exists
-  let iframe = document.getElementById('hidden_iframe');
-  if(!iframe){ iframe = document.createElement('iframe'); iframe.style.display='none'; iframe.name='hidden_iframe'; iframe.id='hidden_iframe'; document.body.appendChild(iframe); }
-  // create form
-  const form = document.createElement('form');
-  form.style.display='none';
-  form.method='POST';
-  form.action = GOOGLE_SHEETS_URL;
-  form.target = 'hidden_iframe';
-  for(const k in data){
-    const input = document.createElement('input');
-    input.type='hidden';
-    input.name = k;
-    input.value = data[k] === undefined ? '' : String(data[k]);
-    form.appendChild(input);
+  try {
+    // create hidden iframe (ensure about:blank)
+    let iframe = document.getElementById('hidden_iframe');
+    if(!iframe){
+      iframe = document.createElement('iframe');
+      iframe.style.display='none';
+      iframe.name='hidden_iframe';
+      iframe.id='hidden_iframe';
+      iframe.src = 'about:blank';
+      document.body.appendChild(iframe);
+    } else {
+      iframe.src = 'about:blank';
+    }
+
+    // create form
+    const form = document.createElement('form');
+    form.style.display='none';
+    form.method='POST';
+    form.action = GOOGLE_SHEETS_URL;
+    form.target = 'hidden_iframe';
+    form.acceptCharset = 'UTF-8';
+    form.enctype = 'application/x-www-form-urlencoded';
+
+    // add inputs in stable predictable order (helps Apps Script mapping/debug)
+    const orderFields = ['name','phone','email','address','date','items','total','message','orderTimestamp','orderNumber'];
+    orderFields.forEach(k=>{
+      const input = document.createElement('input');
+      input.type='hidden';
+      input.name = k;
+      input.value = data[k] === undefined ? '' : String(data[k]);
+      form.appendChild(input);
+    });
+
+    document.body.appendChild(form);
+
+    // submit the form -> reliable in most browsers
+    form.submit();
+
+    // cleanup later
+    setTimeout(()=>{ try{ form.remove(); }catch(e){} }, 5000);
+
+    // BONUS fallback: also try a fetch with no-cors (opaque) so that if iframe is blocked, server still receives something
+    // (fetch with mode:'no-cors' will succeed silently in many browsers but response opaque)
+    try {
+      fetch(GOOGLE_SHEETS_URL, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8' },
+        body: new URLSearchParams(Object.fromEntries(orderFields.map(k=>[k, data[k] === undefined ? '' : String(data[k])])))
+      }).catch(()=>{/*ignore*/});
+    } catch(e){ /*ignore*/ }
+
+    return true;
+  } catch (err){
+    console.error('submitToSheetsViaForm error', err);
+    return false;
   }
-  document.body.appendChild(form);
-  form.submit();
-  // cleanup later
-  setTimeout(()=>{ try{ form.remove(); }catch(e){} }, 5000);
 }
 
 async function submitOrder(e){
@@ -331,7 +369,19 @@ async function submitOrder(e){
   const itemsText = cart.map(i=>`• ${i.name} x${i.qty} = ${i.price * i.qty}₽`).join('\n');
   const total = cart.reduce((s,i)=>s + i.price * i.qty, 0);
 
-  const orderData = { orderNumber, name, phone, email, address, date, items: itemsText, total: String(total), message };
+  const timestamp = new Date();
+  // format ISO for our local history, and pass readable timestamp string for Sheets
+  const orderTimestamp = timestamp.toISOString(); // send full ISO; Apps Script can reformat for sheet if needed
+  const orderTimestampForSheet = (new Date(timestamp)).toLocaleString(); // readable, fallback
+
+  const orderData = {
+    orderNumber,
+    name, phone, email, address, date,
+    items: itemsText,
+    total: String(total),
+    message,
+    orderTimestamp: orderTimestampForSheet // we'll send readable timestamp as a field
+  };
 
   const telegramText = `🌸 *НОВЫЙ ЗАКАЗ МЕЛАНЖ* 🌸\n\n` +
     `🔢 *№ заказа:* ${orderNumber}\n` +
@@ -345,18 +395,21 @@ async function submitOrder(e){
     `💬 *Пожелания:* ${escapeMd(message || 'не указаны')}`;
 
   try{
-    // 1) Send Telegram (fast)
+    // 1) Send Telegram (best-effort)
     await sendToTelegram(telegramText);
 
-    // 2) Submit to Google Sheets via hidden form (this avoids CORS/preflight completely)
-    submitToSheetsViaForm(orderData);
+    // 2) Submit to Google Sheets via hidden form (improved)
+    const sent = submitToSheetsViaForm({
+      ...orderData,
+      orderTimestamp: orderTimestampForSheet // human readable
+    });
 
     // 3) Save local history
-    const clientOrder = { orderNumber, createdAt: new Date().toISOString(), name, phone, email, address, date, items: itemsText, total, sheetsOk: true };
+    const clientOrder = { orderNumber, createdAt: new Date().toISOString(), name, phone, email, address, date, items: itemsText, total, sheetsOk: Boolean(sent) };
     addOrderToHistory(clientOrder);
 
     // 4) Show persistent success popup
-    showSuccessPopup(orderNumber, total, 'отправлено');
+    showSuccessPopup(orderNumber, total, sent ? 'отправлено' : 'попытка отправки');
 
     // reset UI
     document.getElementById('orderForm').reset();
@@ -372,7 +425,7 @@ async function submitOrder(e){
 }
 
 /* ========== HISTORY modal ========== */
-function openHistoryModal(){ const modal=document.getElementById('historyModal'); const list=document.getElementById('historyList'); const arr=getHistory(); if(arr.length===0){ list.innerHTML='<div style="color:#666;padding:12px">Нет сохранённых заказов.</div>' } else { list.innerHTML = arr.map(o=>`<div class="history-item"><div style="font-weight:700">№ ${o.orderNumber} — ${new Date(o.createdAt).toLocaleString()}</div><div style="font-size:0.95rem;color:#444;margin-top:6px">${o.items.split('\n').map(x=>x.replace('•','✓')).join('<br>')}</div><div style="margin-top:8px;font-weight:600">Сумма: ${o.total} ₽ — ${o.sheetsOk ? 'отправлено' : 'не отправлено'}</div></div>`).join('') } modal.style.display='block' }
+function openHistoryModal(){ const modal=document.getElementById('historyModal'); const list=document.getElementById('historyList'); const arr=getHistory(); if(arr.length===0){ list.innerHTML='<div style="color:#666;padding:12px">Нет сохранённых заказов.</div>' } else { list.innerHTML = arr.map(o=>`<div class="history-item"><div style="font-weight:700">№ ${o.orderNumber} — ${new Date(o.createdAt).toLocaleString()}</div><div style="font-size:0.95rem;color:#444;margin-top:6px">${o.items.split('\n').map(x=>x.replace('•','✓')).join('<br>')}</div><div style="margin-top:8px;font-weight:600">Сумма: ${o.total} ₽ — ${o.sheetsOk ? 'попытка отправки' : 'не отправлено'}</div></div>`).join('') } modal.style.display='block' }
 function closeHistory(){ document.getElementById('historyModal').style.display='none' }
 function clearHistory(){ localStorage.removeItem(LS_HISTORY_KEY); openHistoryModal(); flashToast('История очищена') }
 
