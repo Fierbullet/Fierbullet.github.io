@@ -163,28 +163,30 @@ footer{background:var(--accent-dark);color:white;padding:26px;text-align:center;
 
     <div id="orderError" style="margin-bottom:8px"></div>
 
-    <form id="orderForm">
+    <!-- Здесь: autocomplete=off и onsubmit="return false" чтобы избежать автоподачи браузером -->
+    <form id="orderForm" autocomplete="off" onsubmit="return false;">
       <div class="form-group">
-        <input id="name" class="form-input" placeholder="Ваше имя" required />
+        <input id="name" name="name" class="form-input" autocomplete="off" placeholder="Ваше имя" required />
       </div>
       <div class="form-group">
-        <input id="phone" class="form-input" type="tel" placeholder="+7 (999) 456 78 90" required />
+        <input id="phone" name="phone" class="form-input" type="tel" autocomplete="off" placeholder="+7 (999) 456 78 90" required />
       </div>
       <div class="form-group">
-        <input id="email" class="form-input" type="email" placeholder="Введите ваш e-mail (необязательно)" />
+        <input id="email" name="email" class="form-input" type="email" autocomplete="off" placeholder="Введите ваш e-mail (необязательно)" />
       </div>
       <div class="form-group">
-        <input id="address" class="form-input" placeholder="ул. дом. эт. кв." required />
+        <input id="address" name="address" class="form-input" autocomplete="off" placeholder="ул. дом. эт. кв." required />
       </div>
       <div class="form-group">
-        <input id="date" class="form-input" type="date" placeholder="дд.мм.гггг" required />
+        <input id="date" name="date" class="form-input" type="date" autocomplete="off" placeholder="дд.мм.гггг" required />
       </div>
       <div class="form-group">
-        <textarea id="message" class="form-textarea" placeholder="Напишите свои пожелания..."></textarea>
+        <textarea id="message" name="message" class="form-textarea" autocomplete="off" placeholder="Напишите свои пожелания..."></textarea>
       </div>
 
       <div style="margin-top:6px">
-        <button id="submitBtn" type="submit" class="btn">Отправить заказ</button>
+        <!-- type="button" чтобы браузер не триггерил нативную отправку -->
+        <button id="submitBtn" type="button" class="btn" onclick="submitOrder(event)">Отправить заказ</button>
       </div>
     </form>
   </div>
@@ -275,7 +277,7 @@ function removeFromCart(idx){ cart.splice(idx,1); updateCartCount(); saveCartToS
 function clearCart(){ cart=[]; updateCartCount(); saveCartToStorage(); openCart(); flashToast('Корзина очищена') }
 
 /* ========== ORDER FLOW ========== */
-let orderSubmitting = false; // блокировка повторной отправки
+let orderSubmitting = false;
 
 function openOrder(){ if(cart.length===0) return alert('Корзина пуста! Добавьте товары.'); closeCart(); const modal=document.getElementById('orderModal'); const dateInput=document.getElementById('date'); const today=new Date().toISOString().split('T')[0]; dateInput.setAttribute('min',today); document.getElementById('orderError').innerHTML=''; modal.style.display='block' }
 function closeOrder(){ document.getElementById('orderModal').style.display='none' }
@@ -291,7 +293,7 @@ async function sendToTelegram(text){
   } catch(e){ console.error('Telegram send error',e); return false; }
 }
 
-// только form->iframe (без fetch fallback) — чтобы не было двойной записи
+// form -> iframe only (no fetch fallback)
 function submitToSheetsViaForm(data){
   try {
     let iframe = document.getElementById('hidden_iframe');
@@ -326,7 +328,6 @@ function submitToSheetsViaForm(data){
     document.body.appendChild(form);
     form.submit();
     setTimeout(()=>{ try{ form.remove(); }catch(e){} }, 5000);
-
     return true;
   } catch (err){
     console.error('submitToSheetsViaForm error', err);
@@ -335,8 +336,8 @@ function submitToSheetsViaForm(data){
 }
 
 async function submitOrder(e){
-  e.preventDefault();
-  if (orderSubmitting) return; // защита от двойного клика
+  e && e.preventDefault && e.preventDefault();
+  if (orderSubmitting) return;
   orderSubmitting = true;
 
   const submitBtn = document.getElementById('submitBtn');
@@ -380,20 +381,15 @@ async function submitOrder(e){
     `💬 *Пожелания:* ${escapeMd(message || 'не указаны')}`;
 
   try{
-    // 1) Попытка отправить уведомление в Telegram (если не получится — продолжим)
     try { await sendToTelegram(telegramText); } catch(e){ console.warn('telegram fail', e); }
 
-    // 2) Отправка в Google Sheets (form->iframe) — единственный метод здесь
     const sent = submitToSheetsViaForm(orderData);
 
-    // 3) Сохраняем локально историю
     const clientOrder = { orderNumber, createdAt: new Date().toISOString(), name, phone, email, address, date, items: itemsText, total, sheetsOk: Boolean(sent) };
     addOrderToHistory(clientOrder);
 
-    // 4) Показать успешное окно пользователю
     showSuccessPopup(orderNumber, total, sent ? 'отправлено' : 'попытка отправки');
 
-    // сброс UI
     document.getElementById('orderForm').reset();
     cart=[]; updateCartCount(); saveCartToStorage();
     closeOrder();
@@ -402,7 +398,6 @@ async function submitOrder(e){
     console.error('submitOrder error',err);
     document.getElementById('orderError').innerHTML = `<div style="background:#ffeded;color:#900;padding:10px;border-radius:6px">❌ Ошибка при отправке. Позвоните: +7 (999) 466-86-24</div>`;
   } finally {
-    // оставляем кнопку отключённой короткое время, чтобы не было дубликатов случайно
     setTimeout(()=>{ orderSubmitting = false; submitBtn.disabled=false; submitBtn.textContent='Отправить заказ'; }, 2200);
   }
 }
@@ -420,16 +415,4 @@ function onCatClick(cat){ document.querySelectorAll('.cat-tile').forEach(t=>t.st
 function showCategory(cat){ onCatClick(cat) }
 function scrollToCatalog(){ const el=document.getElementById('catalog'); if(!el) return; window.scrollTo({top:el.offsetTop-16,behavior:'smooth'}) }
 function modalOutsideClick(e,id){ const m=document.getElementById(id); if(e.target===m) m.style.display='none' }
-function flashToast(text){ const t=document.createElement('div'); t.textContent=text; Object.assign(t.style,{position:'fixed',right:'16px',bottom:'16px',background:'#2f4d30',color:'#fff',padding:'10px 14px',borderRadius:'10px',zIndex:2000,opacity:0,transition:'opacity .18s'}); document.body.appendChild(t); requestAnimationFrame(()=>t.style.opacity=1); setTimeout(()=>{ t.style.opacity=0; setTimeout(()=>t.remove(),260) },1400) }
-
-/* ========== INIT ========== */
-document.addEventListener('DOMContentLoaded',function(){
-  loadCartFromStorage();
-  const savedNext = localStorage.getItem(LS_NEXT_ORDER_KEY); if(savedNext) nextOrderNumber = Number(savedNext);
-  renderAll(); onCatClick('bouquets');
-  const d=new Date().toISOString().split('T')[0]; const dateInput=document.getElementById('date'); if(dateInput) dateInput.setAttribute('min',d);
-  document.getElementById('orderForm').addEventListener('submit', submitOrder);
-});
-</script>
-</body>
-</html>
+function flashToast
