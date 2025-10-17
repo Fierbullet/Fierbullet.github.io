@@ -1,319 +1,329 @@
-
 <!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Меланж - Цветочный магазин</title>
+    <title>Меланж — Цветочный магазин</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            line-height: 1.6;
-            color: #333;
-            background-color: #fff;
+            background: #f9f7fc;
+            color: #222;
+            font-family: 'Inter', Arial, sans-serif;
         }
-        
-        /* Навигация */
         nav {
-            background-color: #fff;
+            background: #fff;
+            border-bottom: 1px solid #eee;
             padding: 1.5rem 2rem;
             position: sticky;
             top: 0;
             z-index: 100;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.03);
         }
         nav .container {
             max-width: 1200px;
             margin: 0 auto;
             display: flex;
-            justify-content: space-between;
+            justify-content: flex-end;
             align-items: center;
         }
-        nav .logo {
-            font-size: 1.5rem;
-            font-weight: 500;
-            color: #333;
-            text-decoration: none;
-        }
-        nav ul {
-            list-style: none;
+        nav .menu {
             display: flex;
             gap: 2rem;
+            list-style: none;
+            align-items: center;
+            font-size: 1rem;
         }
         nav a {
+            color: #444;
             text-decoration: none;
-            color: #555;
-            font-weight: 400;
             transition: color 0.3s;
         }
         nav a:hover {
-            color: #333;
+            color: #888;
         }
-        
-        /* Hero section */
+        .cart-icon {
+            position: relative;
+            cursor: pointer;
+            font-size: 1.3rem;
+        }
+        .cart-count {
+            position: absolute;
+            top: -8px; right: -10px;
+            background: #222;
+            color: #fff;
+            border-radius: 50%;
+            width: 24px; height: 24px;
+            display: flex; align-items: center; justify-content: center;
+            font-weight: 600; font-size: 0.9rem;
+        }
         .hero {
             background: url('Airbrush-Image-Enhancer-1760695648307.jpg') center/cover no-repeat;
-            padding: 8rem 2rem;
+            min-height: 340px;
+            padding: 7rem 2rem 4rem 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             text-align: center;
-            color: white;
-            position: relative;
-        }
-        .hero::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0,0,0,0.3);
+            color: #222;
+            box-shadow: 0 4px 24px rgba(0,0,0,0.03);
         }
         .hero .container {
-            position: relative;
-            max-width: 800px;
-            margin: 0 auto;
+            background: rgba(255,255,255,0.82);
+            border-radius: 16px;
+            padding: 2.5rem 2rem;
+            box-shadow: 0 2px 16px rgba(0,0,0,0.05);
         }
         .hero h1 {
-            font-size: 2.8rem;
+            font-size: 2.7rem;
             margin-bottom: 1rem;
-            font-weight: 400;
-            letter-spacing: 0.5px;
+            font-weight: 700;
+            color: #222;
         }
         .hero p {
-            font-size: 1.2rem;
-            margin-bottom: 2rem;
-            font-weight: 300;
+            font-size: 1.25rem;
+            color: #444;
+            opacity: 0.93;
+            margin-bottom: 0;
         }
-        .hero button {
-            background-color: #fff;
-            color: #333;
-            padding: 1rem 2.5rem;
-            border: none;
-            border-radius: 4px;
-            font-size: 1rem;
-            cursor: pointer;
-            transition: all 0.3s;
-            font-weight: 500;
+        .hero-btn {
+            margin-top: 2.5rem;
+            background: #fff;
+            color: #222;
+            font-weight: 600;
+            font-size: 1.15rem;
+            padding: 1.1rem 2.2rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.07);
+            border: 1.5px solid #eee;
+            transition: background 0.2s, color 0.2s;
+            text-decoration: none;
+            display: inline-block;
         }
-        .hero button:hover {
-            background-color: #f5f5f5;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        .hero-btn:hover {
+            background: #f3f3f3;
+            color: #111;
         }
-        
-        /* Каталог */
         .catalog {
-            padding: 4rem 2rem;
-            max-width: 1200px;
-            margin: 0 auto;
-            background-color: #f9f7fc;
+            padding: 3.5rem 2rem;
         }
         .catalog h2 {
-            text-align: center;
-            margin-bottom: 3rem;
-            color: #333;
-            font-size: 2rem;
-            font-weight: 400;
+            text-align: left;
+            font-size: 2.1rem;
+            margin-bottom: 2.3rem;
+            color: #222;
         }
-        .products {
+        .products-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
             gap: 2rem;
         }
         .product-card {
-            background: white;
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 2px 14px rgba(0,0,0,0.05);
+            padding: 1.3rem;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+        .product-image {
+            width: 100%; height: 180px;
+            background: #ededed;
             border-radius: 8px;
-            overflow: hidden;
-            transition: all 0.3s;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
-        .product-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
-        }
-        .product-card img {
-            width: 100%;
-            height: 300px;
-            object-fit: cover;
-        }
-        .product-info {
-            padding: 1.5rem;
+        .product-image svg {
+            width: 56px; height: 56px;
         }
         .product-info h3 {
-            font-size: 1.3rem;
+            color: #222;
             margin-bottom: 0.5rem;
-            color: #333;
-            font-weight: 500;
+            font-size: 1.2rem;
         }
         .product-info p {
             color: #666;
-            margin-bottom: 1rem;
-            font-size: 0.95rem;
-        }
-        .product-info .price {
-            font-size: 1.4rem;
-            font-weight: 600;
-            color: #333;
+            font-size: 0.97rem;
             margin-bottom: 1rem;
         }
-        .product-info button {
-            width: 100%;
-            padding: 0.8rem;
-            background-color: #333;
+        .price {
+            font-size: 1.3rem;
+            color: #444;
+            font-weight: bold;
+            margin-bottom: 1rem;
+        }
+        .btn {
+            display: inline-block;
+            padding: 0.8rem 1.5rem;
+            background: #222;
             color: white;
+            text-decoration: none;
+            border-radius: 6px;
+            font-weight: 500;
             border: none;
-            border-radius: 4px;
             cursor: pointer;
             font-size: 1rem;
-            transition: all 0.3s;
-            font-weight: 500;
+            width: 100%;
+            margin-top: auto;
+            transition: background 0.2s;
         }
-        .product-info button:hover {
-            background-color: #555;
+        .btn:hover {
+            background: #444;
         }
-        
-        /* О нас */
-        .about {
-            padding: 4rem 2rem;
-            max-width: 900px;
-            margin: 0 auto;
-            text-align: center;
-        }
-        .about h2 {
-            margin-bottom: 2rem;
+        .contacts {
+            padding: 3rem 2rem;
+            background: #fff;
             color: #333;
-            font-size: 2rem;
-            font-weight: 400;
         }
-        .about p {
-            color: #666;
-            line-height: 1.8;
-            font-size: 1.05rem;
-        }
-        
-        /* Контакты */
-        .contact {
-            background-color: #f9f7fc;
-            padding: 4rem 2rem;
-        }
-        .contact .container {
-            max-width: 600px;
-            margin: 0 auto;
-            text-align: center;
-        }
-        .contact h2 {
-            margin-bottom: 2rem;
-            color: #333;
-            font-size: 2rem;
-            font-weight: 400;
+        .contacts h2 {
+            font-size: 1.9rem;
+            margin-bottom: 1.6rem;
         }
         .contact-info {
             display: flex;
-            flex-direction: column;
-            gap: 1rem;
-            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            gap: 1.3rem;
         }
-        .contact-info p {
-            color: #666;
-            font-size: 1.05rem;
+        .contact-item {
+            text-align: left;
+            background: #f0f0f0;
+            border-radius: 10px;
+            padding: 1.2rem 1rem;
+            min-width: 210px;
+            font-size: 1.08rem;
         }
-        .contact-info a {
-            color: #333;
-            text-decoration: none;
-            font-weight: 500;
-        }
-        .contact-info a:hover {
-            text-decoration: underline;
-        }
-        
-        /* Футер */
+        .contact-item h3 { font-size: 1.19rem; margin-bottom: 0.5rem; }
+        .contact-item a { color: #333; text-decoration: underline; }
         footer {
-            background-color: #333;
-            color: white;
+            background: #222;
+            color: #fff;
             text-align: center;
             padding: 2rem;
+            font-size: 1.1rem;
         }
-        footer p {
-            font-size: 0.95rem;
-            font-weight: 300;
+        @media (max-width: 700px) {
+            nav .container, .hero .container, .catalog .container, .contacts .container { padding: 0 1rem;}
+            .products-grid { grid-template-columns: 1fr;}
         }
     </style>
 </head>
 <body>
+    <!-- Навигация -->
     <nav>
         <div class="container">
-            <a href="#" class="logo">Меланж</a>
-            <ul>
+            <ul class="menu">
                 <li><a href="#catalog">Каталог</a></li>
-                <li><a href="#about">О нас</a></li>
-                <li><a href="#contact">Контакты</a></li>
+                <li><a href="#extra-catalog">Еще цветы</a></li>
+                <li><a href="#contacts">Контакты</a></li>
+                <li class="cart-icon" onclick="alert('Корзина пока недоступна');">
+                    🛒
+                    <span class="cart-count" id="cartCount">0</span>
+                </li>
             </ul>
         </div>
     </nav>
-
+    <!-- Шапка hero -->
     <section class="hero">
         <div class="container">
-            <h1>Цветочный магазин Меланж</h1>
-            <p>Свежие цветы для каждого случая</p>
-            <button>Посмотреть каталог</button>
+            <h1>Меланж</h1>
+            <p>Прекрасные цветы для каждого момента жизни</p>
+            <a href="#catalog" class="hero-btn">Посмотреть каталог</a>
         </div>
     </section>
-
-    <section id="catalog" class="catalog">
-        <h2>Наши букеты</h2>
-        <div class="products">
-            <div class="product-card">
-                <img src="bouquet1.jpg" alt="Букет 1">
-                <div class="product-info">
-                    <h3>Весенний</h3>
-                    <p>Нежный букет из тюльпанов</p>
-                    <div class="price">2500 ₽</div>
-                    <button>Заказать</button>
-                </div>
-            </div>
-            <div class="product-card">
-                <img src="bouquet2.jpg" alt="Букет 2">
-                <div class="product-info">
-                    <h3>Романтика</h3>
-                    <p>Классические красные розы</p>
-                    <div class="price">3500 ₽</div>
-                    <button>Заказать</button>
-                </div>
-            </div>
-            <div class="product-card">
-                <img src="bouquet3.jpg" alt="Букет 3">
-                <div class="product-info">
-                    <h3>Элегант</h3>
-                    <p>Изысканная композиция</p>
-                    <div class="price">4500 ₽</div>
-                    <button>Заказать</button>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section id="about" class="about">
-        <h2>О нас</h2>
-        <p>Меланж - это цветочный магазин с многолетним опытом. Мы специализируемся на создании уникальных букетов и композиций для любого повода.</p>
-    </section>
-
-    <section id="contact" class="contact">
+    <!-- Каталог -->
+    <section class="catalog" id="catalog">
         <div class="container">
-            <h2>Контакты</h2>
-            <div class="contact-info">
-                <p>Телефон: <a href="tel:+79001234567">+7 (900) 123-45-67</a></p>
-                <p>Email: <a href="mailto:info@melange.ru">info@melange.ru</a></p>
-                <p>Адрес: г. Москва, ул. Цветочная, д. 10</p>
+            <h2>Наши букеты</h2>
+            <div class="products-grid">
+                <div class="product-card">
+                    <div class="product-image">
+                        <svg width="56" height="56" fill="none" stroke="#dadada" stroke-width="2"><rect x="2" y="2" width="52" height="52" rx="10"/><path d="M8 38L23 24.5L34.5 35L48 21" stroke="#bbb" stroke-width="2"/><circle cx="18.5" cy="17.5" r="2.5" fill="#dadada" stroke="none"/></svg>
+                    </div>
+                    <div class="product-info">
+                        <h3>Букет 1</h3>
+                        <div class="price">2500 ₽</div>
+                    </div>
+                </div>
+                <div class="product-card">
+                    <div class="product-image">
+                        <svg width="56" height="56" fill="none" stroke="#dadada" stroke-width="2"><rect x="2" y="2" width="52" height="52" rx="10"/><path d="M8 38L23 24.5L34.5 35L48 21" stroke="#bbb" stroke-width="2"/><circle cx="18.5" cy="17.5" r="2.5" fill="#dadada" stroke="none"/></svg>
+                    </div>
+                    <div class="product-info">
+                        <h3>Букет 2</h3>
+                        <div class="price">2200 ₽</div>
+                    </div>
+                </div>
+                <div class="product-card">
+                    <div class="product-image">
+                        <svg width="56" height="56" fill="none" stroke="#dadada" stroke-width="2"><rect x="2" y="2" width="52" height="52" rx="10"/><path d="M8 38L23 24.5L34.5 35L48 21" stroke="#bbb" stroke-width="2"/><circle cx="18.5" cy="17.5" r="2.5" fill="#dadada" stroke="none"/></svg>
+                    </div>
+                    <div class="product-info">
+                        <h3>Букет 3</h3>
+                        <div class="price">2900 ₽</div>
+                    </div>
+                </div>
             </div>
         </div>
     </section>
 
+    <!-- Дополнительный каталог -->
+    <section class="catalog-additional" id="extra-catalog">
+        <div class="container">
+            <h2>Не Просто Цветы (за шт./ветку)</h2>
+            <div class="products-grid">
+                <div class="product-card"><div class="product-image"><svg width="56" height="56" fill="none" stroke="#dadada" stroke-width="2"><rect x="2" y="2" width="52" height="52" rx="10"/><path d="M8 38L23 24.5L34.5 35L48 21" stroke="#bbb" stroke-width="2"/><circle cx="18.5" cy="17.5" r="2.5" fill="#dadada" stroke="none"/></svg></div><div class="product-info"><h3>Хризантема 60 см</h3><div class="price">259 ₽</div></div></div>
+                <div class="product-card"><div class="product-image"><svg width="56" height="56" fill="none" stroke="#dadada" stroke-width="2"><rect x="2" y="2" width="52" height="52" rx="10"/><path d="M8 38L23 24.5L34.5 35L48 21" stroke="#bbb" stroke-width="2"/><circle cx="18.5" cy="17.5" r="2.5" fill="#dadada" stroke="none"/></svg></div><div class="product-info"><h3>Гербера микс</h3><div class="price">200 ₽</div></div></div>
+                <div class="product-card"><div class="product-image"><svg width="56" height="56" fill="none" stroke="#dadada" stroke-width="2"><rect x="2" y="2" width="52" height="52" rx="10"/><path d="M8 38L23 24.5L34.5 35L48 21" stroke="#bbb" stroke-width="2"/><circle cx="18.5" cy="17.5" r="2.5" fill="#dadada" stroke="none"/></svg></div><div class="product-info"><h3>Гиперикум микс</h3><div class="price">300 ₽</div></div></div>
+                <div class="product-card"><div class="product-image"><svg width="56" height="56" fill="none" stroke="#dadada" stroke-width="2"><rect x="2" y="2" width="52" height="52" rx="10"/><path d="M8 38L23 24.5L34.5 35L48 21" stroke="#bbb" stroke-width="2"/><circle cx="18.5" cy="17.5" r="2.5" fill="#dadada" stroke="none"/></svg></div><div class="product-info"><h3>Магнум</h3><div class="price">350 ₽</div></div></div>
+                <div class="product-card"><div class="product-image"><svg width="56" height="56" fill="none" stroke="#dadada" stroke-width="2"><rect x="2" y="2" width="52" height="52" rx="10"/><path d="M8 38L23 24.5L34.5 35L48 21" stroke="#bbb" stroke-width="2"/><circle cx="18.5" cy="17.5" r="2.5" fill="#dadada" stroke="none"/></svg></div><div class="product-info"><h3>Нерине Веста (светло-роз)</h3><div class="price">280 ₽</div></div></div>
+                <div class="product-card"><div class="product-image"><svg width="56" height="56" fill="none" stroke="#dadada" stroke-width="2"><rect x="2" y="2" width="52" height="52" rx="10"/><path d="M8 38L23 24.5L34.5 35L48 21" stroke="#bbb" stroke-width="2"/><circle cx="18.5" cy="17.5" r="2.5" fill="#dadada" stroke="none"/></svg></div><div class="product-info"><h3>Подсолнух</h3><div class="price">350 ₽</div></div></div>
+                <div class="product-card"><div class="product-image"><svg width="56" height="56" fill="none" stroke="#dadada" stroke-width="2"><rect x="2" y="2" width="52" height="52" rx="10"/><path d="M8 38L23 24.5L34.5 35L48 21" stroke="#bbb" stroke-width="2"/><circle cx="18.5" cy="17.5" r="2.5" fill="#dadada" stroke="none"/></svg></div><div class="product-info"><h3>Эустома</h3><div class="price">400 ₽</div></div></div>
+                <div class="product-card"><div class="product-image"><svg width="56" height="56" fill="none" stroke="#dadada" stroke-width="2"><rect x="2" y="2" width="52" height="52" rx="10"/><path d="M8 38L23 24.5L34.5 35L48 21" stroke="#bbb" stroke-width="2"/><circle cx="18.5" cy="17.5" r="2.5" fill="#dadada" stroke="none"/></svg></div><div class="product-info"><h3>Цимбидиум микс (цветок, 1 шт.)</h3><div class="price">350 ₽</div></div></div>
+                <div class="product-card"><div class="product-image"><svg width="56" height="56" fill="none" stroke="#dadada" stroke-width="2"><rect x="2" y="2" width="52" height="52" rx="10"/><path d="M8 38L23 24.5L34.5 35L48 21" stroke="#bbb" stroke-width="2"/><circle cx="18.5" cy="17.5" r="2.5" fill="#dadada" stroke="none"/></svg></div><div class="product-info"><h3>Роза Мондиаль 60 см</h3><div class="price">300 ₽</div></div></div>
+                <div class="product-card"><div class="product-image"><svg width="56" height="56" fill="none" stroke="#dadada" stroke-width="2"><rect x="2" y="2" width="52" height="52" rx="10"/><path d="M8 38L23 24.5L34.5 35L48 21" stroke="#bbb" stroke-width="2"/><circle cx="18.5" cy="17.5" r="2.5" fill="#dadada" stroke="none"/></svg></div><div class="product-info"><h3>Роза Пинк Флойд 60 см</h3><div class="price">350 ₽</div></div></div>
+                <div class="product-card"><div class="product-image"><svg width="56" height="56" fill="none" stroke="#dadada" stroke-width="2"><rect x="2" y="2" width="52" height="52" rx="10"/><path d="M8 38L23 24.5L34.5 35L48 21" stroke="#bbb" stroke-width="2"/><circle cx="18.5" cy="17.5" r="2.5" fill="#dadada" stroke="none"/></svg></div><div class="product-info"><h3>Роза Ред Наоми 60 см</h3><div class="price">250 ₽</div></div></div>
+                <div class="product-card"><div class="product-image"><svg width="56" height="56" fill="none" stroke="#dadada" stroke-width="2"><rect x="2" y="2" width="52" height="52" rx="10"/><path d="M8 38L23 24.5L34.5 35L48 21" stroke="#bbb" stroke-width="2"/><circle cx="18.5" cy="17.5" r="2.5" fill="#dadada" stroke="none"/></svg></div><div class="product-info"><h3>Роза кустовая Мисти Баблз</h3><div class="price">550 ₽</div></div></div>
+                <div class="product-card"><div class="product-image"><svg width="56" height="56" fill="none" stroke="#dadada" stroke-width="2"><rect x="2" y="2" width="52" height="52" rx="10"/><path d="M8 38L23 24.5L34.5 35L48 21" stroke="#bbb" stroke-width="2"/><circle cx="18.5" cy="17.5" r="2.5" fill="#dadada" stroke="none"/></svg></div><div class="product-info"><h3>Роза Эквадор микс 60</h3><div class="price">280 ₽</div></div></div>
+            </div>
+            <h2 style="margin-top:3rem;">Добавки (за шт./ветку)</h2>
+            <div class="products-grid">
+                <div class="product-card"><div class="product-image"><svg width="56" height="56" fill="none" stroke="#dadada" stroke-width="2"><rect x="2" y="2" width="52" height="52" rx="10"/><path d="M8 38L23 24.5L34.5 35L48 21" stroke="#bbb" stroke-width="2"/><circle cx="18.5" cy="17.5" r="2.5" fill="#dadada" stroke="none"/></svg></div><div class="product-info"><h3>Эвкалипт</h3><div class="price">300 ₽</div></div></div>
+                <div class="product-card"><div class="product-image"><svg width="56" height="56" fill="none" stroke="#dadada" stroke-width="2"><rect x="2" y="2" width="52" height="52" rx="10"/><path d="M8 38L23 24.5L34.5 35L48 21" stroke="#bbb" stroke-width="2"/><circle cx="18.5" cy="17.5" r="2.5" fill="#dadada" stroke="none"/></svg></div><div class="product-info"><h3>Ветка ягод</h3><div class="price">300 ₽</div></div></div>
+                <div class="product-card"><div class="product-image"><svg width="56" height="56" fill="none" stroke="#dadada" stroke-width="2"><rect x="2" y="2" width="52" height="52" rx="10"/><path d="M8 38L23 24.5L34.5 35L48 21" stroke="#bbb" stroke-width="2"/><circle cx="18.5" cy="17.5" r="2.5" fill="#dadada" stroke="none"/></svg></div><div class="product-info"><h3>Гипсофила краш. Рейнбоу</h3><div class="price">300 ₽</div></div></div>
+                <div class="product-card"><div class="product-image"><svg width="56" height="56" fill="none" stroke="#dadada" stroke-width="2"><rect x="2" y="2" width="52" height="52" rx="10"/><path d="M8 38L23 24.5L34.5 35L48 21" stroke="#bbb" stroke-width="2"/><circle cx="18.5" cy="17.5" r="2.5" fill="#dadada" stroke="none"/></svg></div><div class="product-info"><h3>Бруния</h3><div class="price">300 ₽</div></div></div>
+                <div class="product-card"><div class="product-image"><svg width="56" height="56" fill="none" stroke="#dadada" stroke-width="2"><rect x="2" y="2" width="52" height="52" rx="10"/><path d="M8 38L23 24.5L34.5 35L48 21" stroke="#bbb" stroke-width="2"/><circle cx="18.5" cy="17.5" r="2.5" fill="#dadada" stroke="none"/></svg></div><div class="product-info"><h3>Лаванда</h3><div class="price">300 ₽</div></div></div>
+                <div class="product-card"><div class="product-image"><svg width="56" height="56" fill="none" stroke="#dadada" stroke-width="2"><rect x="2" y="2" width="52" height="52" rx="10"/><path d="M8 38L23 24.5L34.5 35L48 21" stroke="#bbb" stroke-width="2"/><circle cx="18.5" cy="17.5" r="2.5" fill="#dadada" stroke="none"/></svg></div><div class="product-info"><h3>Солидаго</h3><div class="price">250 ₽</div></div></div>
+                <div class="product-card"><div class="product-image"><svg width="56" height="56" fill="none" stroke="#dadada" stroke-width="2"><rect x="2" y="2" width="52" height="52" rx="10"/><path d="M8 38L23 24.5L34.5 35L48 21" stroke="#bbb" stroke-width="2"/><circle cx="18.5" cy="17.5" r="2.5" fill="#dadada" stroke="none"/></svg></div><div class="product-info"><h3>Трахелиум Блю Лэйк Мичиган</h3><div class="price">250 ₽</div></div></div>
+                <div class="product-card"><div class="product-image"><svg width="56" height="56" fill="none" stroke="#dadada" stroke-width="2"><rect x="2" y="2" width="52" height="52" rx="10"/><path d="M8 38L23 24.5L34.5 35L48 21" stroke="#bbb" stroke-width="2"/><circle cx="18.5" cy="17.5" r="2.5" fill="#dadada" stroke="none"/></svg></div><div class="product-info"><h3>Эрингиум Супер Нова Кьюстар</h3><div class="price">400 ₽</div></div></div>
+            </div>
+        </div>
+    </section>
+    <!-- Контакты -->
+    <section class="contacts" id="contacts">
+        <div class="container">
+            <h2>Свяжитесь с нами</h2>
+            <div class="contact-info">
+                <div class="contact-item">
+                    <h3>Адрес</h3>
+                    <p>бул. Дмитрия Донского, 6</p>
+                </div>
+                <div class="contact-item">
+                    <h3>Телефон</h3>
+                    <p><a href="tel:+79994668624">+7 (999) 466-86-24</a></p>
+                </div>
+                <div class="contact-item">
+                    <h3>Режим работы</h3>
+                    <p>Пн-Пт: 10:00 - 20:00<br>Сб-Вс: 10:00 - 18:00</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- Футер -->
     <footer>
-        <p>© 2025 Меланж. Все права защищены.</p>
+        <p>&copy; 2025 Меланж — цветочный магазин. Все права защищены.</p>
     </footer>
 </body>
 </html>
+Обновлён дизайн сайта: минимализм + новый каталог
