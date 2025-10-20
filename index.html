@@ -248,10 +248,9 @@ const LS_CART_KEY='melange_cart_v1', LS_HISTORY_KEY='melange_orders_v1', LS_NEXT
 let nextOrderNumber = (()=>{ const raw=localStorage.getItem(LS_NEXT_ORDER_KEY); if(raw) return Number(raw); localStorage.setItem(LS_NEXT_ORDER_KEY,String(344643)); return 344643 })();
 
 // endpoints (оставил как у вас — не забудьте поменять на рабочие значения)
-const TELEGRAM_TOKEN='8498848056:AAE8c_yh6rCk2paOR-2ut7vRAadH4-Lrdhs';
-const TELEGRAM_CHAT_ID='503216481';
-const TELEGRAM_URL=`https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage`;
-const GOOGLE_SHEETS_URL='https://script.google.com/macros/s/AKfycbxxc1Hbr5Hzc2MhWK77bT7y9QcsM4FEIVMVgN0_Ny1DDM1ULMEVGkHWeXmYDuqjY7LAug/exec';
+  
+// ВАЖНО: сюда вставь URL из шага 3 (web app)
+const GOOGLE_SHEETS_URL = 'https://script.google.com/macros/s/AKfycbzA-RBI298woIzhpR9DYNXqcvMQOCa6Ut3gmXgIpugmzkbJSvqUIOypXra1tWF7AcopCw/exec';
 
 /* ========== HELPERS ========== */
 function findProductById(id){ return BOUQUETS.concat(FLOWERS,DECOR).find(p=>p.id===id) }
