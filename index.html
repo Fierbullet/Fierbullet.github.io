@@ -56,10 +56,19 @@ main{max-width:1100px;margin:18px auto 80px;padding:0 16px}
 .success-close{position:absolute;right:12px;top:8px;background:none;border:none;font-size:20px;cursor:pointer;color:#666;}
 .success-text{font-size:1rem;color:#222;line-height:1.5}
 .history-list{max-height:320px;overflow:auto;padding:8px;display:flex;flex-direction:column;gap:8px;}
-.history-item{background:#fff;border-radius:8px;padding:8px;border:1px solid rgba(0,0,0,0.04);box-shadow:var(--soft-shadow);}
+.history-item{background:#fff;border-radius:8px;padding:8px;border:1px solid rgba(0,0,0,0.04);box-shadow:var(--soft-shadow);} 
 footer{background:var(--accent-dark);color:white;padding:26px;text-align:center;border-top-left-radius:16px;border-top-right-radius:16px;margin-top:36px}
+
+/* === Floating cart styles === */
+.floating-cart{position:fixed;right:16px;bottom:16px;z-index:2000;display:flex;flex-direction:column;align-items:flex-end;gap:8px}
+.floating-cart-button{background:var(--accent-dark);color:#fff;padding:12px 14px;border-radius:999px;display:flex;align-items:center;gap:8px;box-shadow:0 10px 30px rgba(45,73,44,0.18);cursor:pointer;border:none}
+.floating-cart-count{background:#fff;color:var(--accent-dark);padding:4px 8px;border-radius:999px;font-weight:800}
+.floating-cart-drawer{width:340px;max-width:92vw;background:var(--card);border-radius:12px;padding:10px;box-shadow:0 18px 60px rgba(0,0,0,0.18);display:none}
+.floating-cart-drawer .mini-item{display:flex;justify-content:space-between;align-items:center;padding:8px;border-radius:8px;background:var(--muted);margin-bottom:8px}
+
 @media (max-width:980px){ .category-tiles{grid-template-columns:repeat(3,1fr);gap:10px} .cat-tile{height:86px} }
-@media (max-width:700px){ .hero-title{font-size:2.1rem} .category-tiles{grid-template-columns:1fr} .cat-tile{height:86px} .product-image{height:140px} .modal-content{margin:20px 8px} .success-card{margin:0 12px} }
+@media (max-width:700px){ .hero-title{font-size:2.1rem} .category-tiles{grid-template-columns:1fr} .cat-tile{height:86px} .product-image{height:140px} .modal-content{margin:20px 8px} .success-card{margin:0 12px} .floating-cart-drawer{right:8px;left:auto;width:92vw;}
+}
 </style>
 </head>
 <body>
@@ -133,7 +142,7 @@ footer{background:var(--accent-dark);color:white;padding:26px;text-align:center;
         <strong>Адрес</strong><div>бул. Дмитрия Донского, 6</div>
       </div>
       <div style="background:var(--card);padding:12px;border-radius:10px;min-width:200px;box-shadow:var(--soft-shadow)">
-        <strong>Телефон</strong><div><a href="tel:+79994668624">+7 (999) 466-86-24</a></div>
+        <strong>Телефон</strong><div><a href="tel:+79994668665">+7 (999) 466-86-24</a></div>
       </div>
       <div style="background:var(--card);padding:12px;border-radius:10px;min-width:200px;box-shadow:var(--soft-shadow)">
         <strong>Режим работы</strong><div>Пн-Пт: 10:00 - 20:00<br>Сб-Вс: 10:00 - 18:00</div>
@@ -210,6 +219,15 @@ footer{background:var(--accent-dark);color:white;padding:26px;text-align:center;
   </div>
 </div>
 
+<!-- FLOATING CART -->
+<div class="floating-cart" id="floatingCart">
+  <div class="floating-cart-drawer" id="floatingCartDrawer" aria-hidden="true"></div>
+  <button class="floating-cart-button" id="floatingCartBtn" aria-label="Открыть корзину" onclick="toggleFloatingCart()">
+    🛒 <span id="floatingCartLabel" style="margin-left:6px">Корзина</span>
+    <span class="floating-cart-count" id="floatingCartCount">0</span>
+  </button>
+</div>
+
 <footer>&copy; 2025 Меланж — цветочный магазин.</footer>
 
 <script>
@@ -223,11 +241,10 @@ let cart=[]; const cartCountEl=document.getElementById('cartCount');
 const LS_CART_KEY='melange_cart_v1', LS_HISTORY_KEY='melange_orders_v1', LS_NEXT_ORDER_KEY='melange_next_order_v1';
 let nextOrderNumber = (()=>{ const raw=localStorage.getItem(LS_NEXT_ORDER_KEY); if(raw) return Number(raw); localStorage.setItem(LS_NEXT_ORDER_KEY,String(344643)); return 344643 })();
 
-// endpoints
+// endpoints (оставил как у вас — не забудьте поменять на рабочие значения)
 const TELEGRAM_TOKEN='8498848056:AAE8c_yh6rCk2paOR-2ut7vRAadH4-Lrdhs';
 const TELEGRAM_CHAT_ID='503216481';
 const TELEGRAM_URL=`https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage`;
-// ВАЖНО: замените на ваш рабочий URL web app из Apps Script (тот же, что вы публиковали)
 const GOOGLE_SHEETS_URL='https://script.google.com/macros/s/AKfycbwHXZn4FUvU8ds5vCUhOPjB-4oq7zVUWksTHkGcHZkZ1lMWRrf1Vb0fZbeA0f7kYj_lwA/exec';
 
 /* ========== HELPERS ========== */
@@ -237,7 +254,7 @@ function escapeMd(s=''){ return String(s).replaceAll('*','\\*').replaceAll('_','
 
 /* ========== LOCAL STORAGE ========== */
 function saveCartToStorage(){ localStorage.setItem(LS_CART_KEY,JSON.stringify(cart)) }
-function loadCartFromStorage(){ try{ const raw=localStorage.getItem(LS_CART_KEY); cart = raw?JSON.parse(raw):[] }catch(e){ cart=[] } updateCartCount() }
+function loadCartFromStorage(){ try{ const raw=localStorage.getItem(LS_CART_KEY); cart = raw?JSON.parse(raw):[] }catch(e){ cart=[] } updateCartCount(); updateFloatingCart(); }
 function saveNextOrder(){ localStorage.setItem(LS_NEXT_ORDER_KEY,String(nextOrderNumber)) }
 function addOrderToHistory(order){ const arr=JSON.parse(localStorage.getItem(LS_HISTORY_KEY)||'[]'); arr.unshift(order); localStorage.setItem(LS_HISTORY_KEY,JSON.stringify(arr)) }
 function getHistory(){ try{ return JSON.parse(localStorage.getItem(LS_HISTORY_KEY)||'[]') }catch(e){ return [] } }
@@ -253,11 +270,12 @@ function renderGrid(gridId,items){ const grid=document.getElementById(gridId); g
     </div>
   </div>
 `).join('') }
-function renderAll(){ renderGrid('bouquetsGrid',BOUQUETS); renderGrid('flowersGrid',FLOWERS); renderGrid('decorGrid',DECOR); updateCartCount() }
+function renderAll(){ renderGrid('bouquetsGrid',BOUQUETS); renderGrid('flowersGrid',FLOWERS); renderGrid('decorGrid',DECOR); updateCartCount(); updateFloatingCart(); }
 
 /* ========== CART ========== */
-function addToCart(productId){ const prod=findProductById(productId); if(!prod) return alert('Товар не найден'); const exist=cart.find(i=>i.id===productId); if(exist) exist.qty++; else cart.push({id:prod.id,name:prod.name,price:prod.price,qty:1}); updateCartCount(); saveCartToStorage(); flashToast(`Добавлено: ${prod.name}`) }
+function addToCart(productId){ const prod=findProductById(productId); if(!prod) return alert('Товар не найден'); const exist=cart.find(i=>i.id===productId); if(exist) exist.qty++; else cart.push({id:prod.id,name:prod.name,price:prod.price,qty:1}); updateCartCount(); saveCartToStorage(); updateFloatingCart(); flashToast(`Добавлено: ${prod.name}`) }
 function updateCartCount(){ const count=cart.reduce((s,i)=>s+i.qty,0); cartCountEl.textContent=count; saveCartToStorage() }
+
 function openCart(){ const modal=document.getElementById('cartModal'); const content=document.getElementById('cartContent'); if(cart.length===0){ content.innerHTML='<div style="padding:18px;text-align:center;color:#666">Ваша корзина пуста 🛒</div>' } else { const total=cart.reduce((s,i)=>s+i.price*i.qty,0); const itemsHtml=cart.map((item,idx)=>`
   <div class="cart-item">
     <div><div class="cart-item-name">${escapeHtml(item.name)}</div><div class="cart-item-price">${item.price} ₽ × ${item.qty} = ${item.price*item.qty} ₽</div></div>
@@ -270,9 +288,16 @@ function openCart(){ const modal=document.getElementById('cartModal'); const con
   </div>
 `).join(''); content.innerHTML = `<div class="cart-items">${itemsHtml}</div><div style="margin-top:10px"><div class="cart-total">Итого: ${total} ₽</div><div style="margin-top:10px;display:flex;gap:10px"><button class="btn" onclick="openOrder()">Оформить заказ</button><button class="btn ghost" onclick="clearCart()">Очистить</button></div></div>` } modal.style.display='block' }
 function closeCart(){ document.getElementById('cartModal').style.display='none' }
-function updateQty(idx,change){ cart[idx].qty += change; if(cart[idx].qty<=0) cart.splice(idx,1); updateCartCount(); saveCartToStorage(); openCart() }
-function removeFromCart(idx){ cart.splice(idx,1); updateCartCount(); saveCartToStorage(); openCart() }
-function clearCart(){ cart=[]; updateCartCount(); saveCartToStorage(); openCart(); flashToast('Корзина очищена') }
+function updateQty(idx,change){ cart[idx].qty += change; if(cart[idx].qty<=0) cart.splice(idx,1); updateCartCount(); saveCartToStorage(); updateFloatingCart(); openCart() }
+function removeFromCart(idx){ cart.splice(idx,1); updateCartCount(); saveCartToStorage(); updateFloatingCart(); openCart() }
+function clearCart(){ cart=[]; updateCartCount(); saveCartToStorage(); updateFloatingCart(); openCart(); flashToast('Корзина очищена') }
+
+/* ========== FLOATING CART (mini drawer) ========== */
+function updateFloatingCart(){ const count = cart.reduce((s,i)=>s+i.qty,0); const total = cart.reduce((s,i)=>s+i.price*i.qty,0); const btnCount = document.getElementById('floatingCartCount'); const label=document.getElementById('floatingCartLabel'); if(btnCount) btnCount.textContent = count; if(label) label.title = `Итого: ${total} ₽`; const drawer=document.getElementById('floatingCartDrawer'); if(!drawer) return; if(cart.length===0){ drawer.innerHTML = '<div style="padding:8px;color:#666">Корзина пуста</div>' } else { drawer.innerHTML = cart.map(i=>`<div class="mini-item"><div><strong>${escapeHtml(i.name)}</strong><div style="font-size:0.9rem;color:#444">${i.qty} × ${i.price} ₽</div></div><div style="text-align:right">${i.price * i.qty} ₽</div></div>`).join('') + `<div style="display:flex;gap:8px;justify-content:space-between;align-items:center;margin-top:8px"><div style="font-weight:700">Итого: ${total} ₽</div><div style="display:flex;gap:6px"><button class="btn" onclick="openCart();toggleFloatingCart(false)">Полная корзина</button><button class="btn ghost" onclick="clearCart();toggleFloatingCart(false)">Очистить</button></div></div>` }
+}
+
+function toggleFloatingCart(forceState){ const drawer=document.getElementById('floatingCartDrawer'); if(!drawer) return; const isOpen = drawer.style.display === 'block'; const shouldOpen = typeof forceState === 'boolean' ? forceState : !isOpen; drawer.style.display = shouldOpen ? 'block' : 'none'; drawer.setAttribute('aria-hidden', shouldOpen ? 'false' : 'true'); if(shouldOpen){ updateFloatingCart(); }
+}
 
 /* ========== ORDER FLOW ========== */
 let orderSubmitting = false; // блокировка повторной отправки
@@ -291,7 +316,6 @@ async function sendToTelegram(text){
   } catch(e){ console.error('Telegram send error',e); return false; }
 }
 
-// только form->iframe (без fetch fallback) — чтобы не было двойной записи
 function submitToSheetsViaForm(data){
   try {
     let iframe = document.getElementById('hidden_iframe');
@@ -315,13 +339,7 @@ function submitToSheetsViaForm(data){
     form.enctype = 'application/x-www-form-urlencoded';
 
     const orderFields = ['name','phone','email','address','date','items','total','message','orderTimestamp','orderNumber'];
-    orderFields.forEach(k=>{
-      const input = document.createElement('input');
-      input.type='hidden';
-      input.name = k;
-      input.value = data[k] === undefined ? '' : String(data[k]);
-      form.appendChild(input);
-    });
+    orderFields.forEach(k=>{ const input = document.createElement('input'); input.type='hidden'; input.name = k; input.value = data[k] === undefined ? '' : String(data[k]); form.appendChild(input); });
 
     document.body.appendChild(form);
     form.submit();
@@ -380,29 +398,18 @@ async function submitOrder(e){
     `💬 *Пожелания:* ${escapeMd(message || 'не указаны')}`;
 
   try{
-    // 1) Попытка отправить уведомление в Telegram (если не получится — продолжим)
     try { await sendToTelegram(telegramText); } catch(e){ console.warn('telegram fail', e); }
-
-    // 2) Отправка в Google Sheets (form->iframe) — единственный метод здесь
     const sent = submitToSheetsViaForm(orderData);
-
-    // 3) Сохраняем локально историю
     const clientOrder = { orderNumber, createdAt: new Date().toISOString(), name, phone, email, address, date, items: itemsText, total, sheetsOk: Boolean(sent) };
     addOrderToHistory(clientOrder);
-
-    // 4) Показать успешное окно пользователю
     showSuccessPopup(orderNumber, total, sent ? 'отправлено' : 'попытка отправки');
-
-    // сброс UI
     document.getElementById('orderForm').reset();
-    cart=[]; updateCartCount(); saveCartToStorage();
-    closeOrder();
+    cart=[]; updateCartCount(); saveCartToStorage(); updateFloatingCart(); closeOrder();
 
   }catch(err){
     console.error('submitOrder error',err);
     document.getElementById('orderError').innerHTML = `<div style="background:#ffeded;color:#900;padding:10px;border-radius:6px">❌ Ошибка при отправке. Позвоните: +7 (999) 466-86-24</div>`;
   } finally {
-    // оставляем кнопку отключённой короткое время, чтобы не было дубликатов случайно
     setTimeout(()=>{ orderSubmitting = false; submitBtn.disabled=false; submitBtn.textContent='Отправить заказ'; }, 2200);
   }
 }
@@ -416,9 +423,11 @@ function clearHistory(){ localStorage.removeItem(LS_HISTORY_KEY); openHistoryMod
 function showSuccessPopup(orderNumber,total,sheetsStatus){ const modal=document.getElementById('successModal'); const content=document.getElementById('successContent'); content.innerHTML = `<div style="font-weight:700;margin-bottom:8px">Спасибо за ваш заказ!</div><div style="margin-bottom:10px">Мы уже собираем для вас самый свежий и красивый букет. Ожидайте звонка от нашего менеджера в ближайшее время для уточнения всех деталей.</div><div style="background:#fbfff8;padding:10px;border-radius:8px;border:1px solid rgba(93,111,79,0.04);margin-bottom:10px"><strong>№ заказа:</strong> ${orderNumber}<br><strong>Сумма:</strong> ${total} ₽</div><div style="font-size:0.95rem;color:#444">Статус записи в Google Sheets: <strong>${sheetsStatus}</strong>.</div>`; modal.style.display='flex'; modal.setAttribute('aria-hidden','false') }
 function closeSuccess(){ const modal=document.getElementById('successModal'); modal.style.display='none'; modal.setAttribute('aria-hidden','true') }
 
-function onCatClick(cat){ document.querySelectorAll('.cat-tile').forEach(t=>t.style.borderColor='rgba(47,77,48,0.03)'); if(cat==='bouquets') document.getElementById('tile-bouquets').style.borderColor='rgba(93,111,79,0.18)'; if(cat==='decor') document.getElementById('tile-decor').style.borderColor='rgba(93,111,79,0.18)'; if(cat==='flowers') document.getElementById('tile-flowers').style.borderColor='rgba(93,111,79,0.18)'; document.querySelectorAll('[data-section]').forEach(sec=>{ sec.style.display = sec.dataset.section===cat ? '' : 'none'; }); if(window.innerWidth<=700){ setTimeout(()=>scrollToCatalog(),80) } }
-function showCategory(cat){ onCatClick(cat) }
+/* ========== CATEGORIES & SCROLL FIX (mobile) ========== */
+function onCatClick(cat, skipScroll=false){ document.querySelectorAll('.cat-tile').forEach(t=>t.style.borderColor='rgba(47,77,48,0.03)'); if(cat==='bouquets') document.getElementById('tile-bouquets').style.borderColor='rgba(93,111,79,0.18)'; if(cat==='decor') document.getElementById('tile-decor').style.borderColor='rgba(93,111,79,0.18)'; if(cat==='flowers') document.getElementById('tile-flowers').style.borderColor='rgba(93,111,79,0.18)'; document.querySelectorAll('[data-section]').forEach(sec=>{ sec.style.display = sec.dataset.section===cat ? '' : 'none'; }); if(window.innerWidth<=700 && !skipScroll){ setTimeout(()=>scrollToCatalog(),80) } }
+function showCategory(cat){ onCatClick(cat,false) }
 function scrollToCatalog(){ const el=document.getElementById('catalog'); if(!el) return; window.scrollTo({top:el.offsetTop-16,behavior:'smooth'}) }
+
 function modalOutsideClick(e,id){ const m=document.getElementById(id); if(e.target===m) m.style.display='none' }
 function flashToast(text){ const t=document.createElement('div'); t.textContent=text; Object.assign(t.style,{position:'fixed',right:'16px',bottom:'16px',background:'#2f4d30',color:'#fff',padding:'10px 14px',borderRadius:'10px',zIndex:2000,opacity:0,transition:'opacity .18s'}); document.body.appendChild(t); requestAnimationFrame(()=>t.style.opacity=1); setTimeout(()=>{ t.style.opacity=0; setTimeout(()=>t.remove(),260) },1400) }
 
@@ -426,7 +435,9 @@ function flashToast(text){ const t=document.createElement('div'); t.textContent=
 document.addEventListener('DOMContentLoaded',function(){
   loadCartFromStorage();
   const savedNext = localStorage.getItem(LS_NEXT_ORDER_KEY); if(savedNext) nextOrderNumber = Number(savedNext);
-  renderAll(); onCatClick('bouquets');
+  renderAll();
+  // На загрузке показываем секцию "букеты", но НЕ скроллим на мобильных — это решает вашу проблему.
+  onCatClick('bouquets', true);
   const d=new Date().toISOString().split('T')[0]; const dateInput=document.getElementById('date'); if(dateInput) dateInput.setAttribute('min',d);
   document.getElementById('orderForm').addEventListener('submit', submitOrder);
 });
