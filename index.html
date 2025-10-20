@@ -16,13 +16,13 @@ nav{position:sticky;top:0;z-index:60;background:linear-gradient(135deg,var(--acc
 .logo span{font-size:1.5rem}
 .nav-links{display:flex;gap:14px;align-items:center}
 .nav-links a{color:#fff;text-decoration:none;font-weight:600;padding:6px 10px;border-radius:8px;opacity:0.95}
-.cart-icon{position:relative;cursor:pointer;font-size:1.25rem;color:#fff}
-.cart-count{position:absolute;top:-8px;right:-10px;background:#2f4d30;color:#fff;width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:0.78rem}
-.hero{background:url('Airbrush-Image-Enhancer-1760695648307.jpg') center/cover no-repeat;min-height:340px;display:flex;align-items:center;justify-content:center;padding:48px 16px;box-shadow:0 6px 24px rgba(0,0,0,0.05)}
+.floating-cart{position:fixed;bottom:24px;right:24px;width:60px;height:60px;background:linear-gradient(135deg,var(--accent-dark),var(--accent));border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 6px 24px rgba(93,111,79,0.3);z-index:500;font-size:1.8rem;transition:transform 0.2s,box-shadow 0.2s}
+.floating-cart:hover{transform:scale(1.1);box-shadow:0 8px 32px rgba(93,111,79,0.4)}
+.floating-cart-count{position:absolute;top:-8px;right:-8px;background:#c94a4a;color:white;width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:0.85rem}
+.hero{background:url('https://fierbullet.github.io/Airbrush-Image-Enhancer-1760695648307.jpg') center/cover no-repeat;min-height:340px;display:flex;align-items:center;justify-content:center;padding:48px 16px;box-shadow:0 6px 24px rgba(0,0,0,0.05)}
 .hero-inner{width:100%;max-width:1100px;padding:28px;text-align:left}
 .hero-title{font-family:'Dancing Script',cursive;color:#fff;font-size:2.6rem;line-height:1;margin-bottom:8px;text-shadow:0 6px 20px rgba(0,0,0,0.45)}
 .hero-sub{color:#fff;font-size:1.05rem;margin-bottom:10px;text-shadow:0 6px 18px rgba(0,0,0,0.35)}
-.hero-meta{color:#fff;opacity:0.95;font-weight:600;text-shadow:0 4px 12px rgba(0,0,0,0.32)}
 .category-tiles{max-width:1100px;margin:18px auto 0;padding:0 16px;display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
 .cat-tile{background:var(--card);border-radius:12px;height:92px;display:flex;align-items:center;padding:12px 16px;gap:12px;cursor:pointer;box-shadow:var(--soft-shadow);border:1px solid rgba(47,77,48,0.03);transition:transform .12s,box-shadow .12s,border-color .12s}
 .cat-tile:hover{transform:translateY(-4px);box-shadow:0 12px 30px rgba(45,73,44,0.06)}
@@ -49,30 +49,27 @@ main{max-width:1100px;margin:18px auto 80px;padding:0 16px}
 .cart-item .cart-item-name{font-weight:700;color:var(--accent-dark)}
 .cart-total{background:linear-gradient(90deg,var(--accent-dark),var(--accent));color:white;padding:12px;border-radius:8px;font-weight:700;text-align:right}
 .form-group{margin-bottom:10px}
-.form-input{width:100%;padding:10px;border-radius:8px;border:1px solid #eee;font-size:1rem;font-family:Helvetica,'Arial',sans-serif}
-.form-textarea{width:100%;padding:10px;border-radius:8px;border:1px solid #eee;font-size:1rem;font-family:Helvetica,'Arial',sans-serif;min-height:80px;resize:vertical}
+.form-input{width:100%;padding:10px;border-radius:8px;border:1px solid #eee;font-size:1rem}
+.form-textarea{width:100%;padding:10px;border-radius:8px;border:1px solid #eee;font-size:1rem;min-height:80px;resize:vertical}
 .success-modal{display:none;position:fixed;z-index:1300;left:0;top:0;width:100%;height:100%;background:rgba(0,0,0,0.35);align-items:center;justify-content:center;padding:24px}
-.success-card{background:#fff;border-radius:14px;padding:18px;max-width:640px;width:100%;box-shadow:0 18px 60px rgba(0,0,0,0.16);position:relative;}
+.success-card{background:#fff;border-radius:14px;padding:18px;max-width:640px;width:100%;box-shadow:0 18px 60px rgba(0,0,0,0.16)}
 .success-close{position:absolute;right:12px;top:8px;background:none;border:none;font-size:20px;cursor:pointer;color:#666;}
 .success-text{font-size:1rem;color:#222;line-height:1.5}
 .history-list{max-height:320px;overflow:auto;padding:8px;display:flex;flex-direction:column;gap:8px;}
 .history-item{background:#fff;border-radius:8px;padding:8px;border:1px solid rgba(0,0,0,0.04);box-shadow:var(--soft-shadow);}
 footer{background:var(--accent-dark);color:white;padding:26px;text-align:center;border-top-left-radius:16px;border-top-right-radius:16px;margin-top:36px}
-@media (max-width:980px){ .category-tiles{grid-template-columns:repeat(3,1fr);gap:10px} .cat-tile{height:86px} }
-@media (max-width:700px){ .hero-title{font-size:2.1rem} .category-tiles{grid-template-columns:1fr} .cat-tile{height:86px} .product-image{height:140px} .modal-content{margin:20px 8px} .success-card{margin:0 12px} }
+@media (max-width:700px){.category-tiles{grid-template-columns:1fr}.product-image{height:140px}.modal-content{margin:20px 8px}.floating-cart{bottom:16px;right:16px;width:54px;height:54px}}
 </style>
 </head>
 <body>
 
 <nav>
   <div class="nav-inner">
+    <div class="logo"><span>🌸</span> Mélange</div>
     <div class="nav-links">
       <a href="#catalog" onclick="showCategory('bouquets')">Каталог</a>
       <a href="#contacts">Контакты</a>
       <a href="#" onclick="openHistoryModal();return false;">Мои заказы</a>
-      <div class="cart-icon" onclick="openCart()">
-        🛒 <div class="cart-count" id="cartCount">0</div>
-      </div>
     </div>
   </div>
 </nav>
@@ -80,32 +77,21 @@ footer{background:var(--accent-dark);color:white;padding:26px;text-align:center;
 <section class="hero" role="banner">
   <div class="hero-inner">
     <div class="hero-title">Mélange</div>
-    <div class="hero-sub">Прекрасные цветы для каждого момента жизни — собери свои чувства в букет  ~</div>
+    <div class="hero-sub">Прекрасные цветы для каждого момента жизни</div>
   </div>
 </section>
 
-<div class="category-tiles" aria-hidden="false">
+<div class="category-tiles">
   <div class="cat-tile" id="tile-bouquets" onclick="onCatClick('bouquets')">
-    <div>
-      <h3>Не просто букеты</h3>
-      <div style="color:#687a5f;font-size:0.92rem;margin-top:6px">Готовые авторские решения</div>
-    </div>
+    <div><h3>Не просто букеты</h3></div>
     <p>Смотреть →</p>
   </div>
-
   <div class="cat-tile" id="tile-decor" onclick="onCatClick('decor')">
-    <div>
-      <h3>Веточки и декор</h3>
-      <div style="color:#687a5f;font-size:0.92rem;margin-top:6px">Эвкалипт, ягоды, зелень</div>
-    </div>
+    <div><h3>Веточки и декор</h3></div>
     <p>Смотреть →</p>
   </div>
-
   <div class="cat-tile" id="tile-flowers" onclick="onCatClick('flowers')">
-    <div>
-      <h3>Не просто цветы</h3>
-      <div style="color:#687a5f;font-size:0.92rem;margin-top:6px">Стебли поштучно для сборки</div>
-    </div>
+    <div><h3>Не просто цветы</h3></div>
     <p>Смотреть →</p>
   </div>
 </div>
@@ -115,17 +101,14 @@ footer{background:var(--accent-dark);color:white;padding:26px;text-align:center;
     <div class="catalog-title">Букеты</div>
     <div class="products-grid" id="bouquetsGrid"></div>
   </section>
-
   <section class="catalog-section" id="section-decor" data-section="decor" style="display:none">
     <div class="catalog-title">Веточки · Декор</div>
     <div class="products-grid" id="decorGrid"></div>
   </section>
-
   <section class="catalog-section" id="section-flowers" data-section="flowers" style="display:none">
     <div class="catalog-title">Не просто цветы</div>
     <div class="products-grid" id="flowersGrid"></div>
   </section>
-
   <section class="catalog-section" id="contacts" style="margin-top:34px">
     <div class="catalog-title">Свяжитесь с нами</div>
     <div style="display:flex;gap:12px;flex-wrap:wrap">
@@ -135,301 +118,81 @@ footer{background:var(--accent-dark);color:white;padding:26px;text-align:center;
       <div style="background:var(--card);padding:12px;border-radius:10px;min-width:200px;box-shadow:var(--soft-shadow)">
         <strong>Телефон</strong><div><a href="tel:+79994668624">+7 (999) 466-86-24</a></div>
       </div>
-      <div style="background:var(--card);padding:12px;border-radius:10px;min-width:200px;box-shadow:var(--soft-shadow)">
-        <strong>Режим работы</strong><div>Пн-Пт: 10:00 - 20:00<br>Сб-Вс: 10:00 - 18:00</div>
-      </div>
     </div>
   </section>
 </main>
 
-<!-- CART MODAL -->
-<div id="cartModal" class="modal" onclick="modalOutsideClick(event,'cartModal')">
+<div class="floating-cart" onclick="openCart()">🛒<div class="floating-cart-count" id="floatingCartCount">0</div></div>
+
+<div id="cartModal" class="modal" onclick="if(event.target===this)closeCart()">
   <div class="modal-content" role="dialog" aria-modal="true">
-    <div class="modal-header">
-      <h3>🛒 Корзина</h3>
-      <button class="close" onclick="closeCart()">&times;</button>
-    </div>
+    <div class="modal-header"><h3>🛒 Корзина</h3><button class="close" onclick="closeCart()">&times;</button></div>
     <div id="cartContent"></div>
   </div>
 </div>
 
-<!-- ORDER MODAL -->
-<div id="orderModal" class="modal" onclick="modalOutsideClick(event,'orderModal')">
+<div id="orderModal" class="modal" onclick="if(event.target===this)closeOrder()">
   <div class="modal-content" role="dialog" aria-modal="true">
-    <div class="modal-header">
-      <h3>📋 Оформить заказ</h3>
-      <button class="close" onclick="closeOrder()">&times;</button>
-    </div>
-
+    <div class="modal-header"><h3>📋 Оформить заказ</h3><button class="close" onclick="closeOrder()">&times;</button></div>
     <div id="orderError" style="margin-bottom:8px"></div>
-
     <form id="orderForm">
-      <div class="form-group">
-        <input id="name" class="form-input" placeholder="Ваше имя" required />
-      </div>
-      <div class="form-group">
-        <input id="phone" class="form-input" type="tel" placeholder="+7 (999) 456 78 90" required />
-      </div>
-      <div class="form-group">
-        <input id="email" class="form-input" type="email" placeholder="Введите ваш e-mail (необязательно)" />
-      </div>
-      <div class="form-group">
-        <input id="address" class="form-input" placeholder="ул. дом. эт. кв." required />
-      </div>
-      <div class="form-group">
-        <input id="date" class="form-input" type="date" placeholder="дд.мм.гггг" required />
-      </div>
-      <div class="form-group">
-        <textarea id="message" class="form-textarea" placeholder="Напишите свои пожелания..."></textarea>
-      </div>
-
-      <div style="margin-top:6px">
-        <button id="submitBtn" type="submit" class="btn">Отправить заказ</button>
-      </div>
+      <div class="form-group"><input id="name" class="form-input" placeholder="Ваше имя" required /></div>
+      <div class="form-group"><input id="phone" class="form-input" type="tel" placeholder="+7 (999) 456 78 90" required /></div>
+      <div class="form-group"><input id="email" class="form-input" type="email" placeholder="E-mail (необязательно)" /></div>
+      <div class="form-group"><input id="address" class="form-input" placeholder="Адрес доставки" required /></div>
+      <div class="form-group"><input id="date" class="form-input" type="date" required /></div>
+      <div class="form-group"><textarea id="message" class="form-textarea" placeholder="Ваши пожелания..."></textarea></div>
+      <div style="margin-top:6px"><button id="submitBtn" type="submit" class="btn">Отправить заказ</button></div>
     </form>
   </div>
 </div>
 
-<!-- SUCCESS POPUP -->
-<div id="successModal" class="success-modal" aria-hidden="true">
-  <div class="success-card" role="dialog" aria-modal="true" aria-labelledby="successTitle">
+<div id="successModal" class="success-modal">
+  <div class="success-card" role="dialog" aria-modal="true">
     <button class="success-close" onclick="closeSuccess()">✕</button>
     <div class="success-text" id="successContent"></div>
   </div>
 </div>
 
-<!-- ORDER HISTORY MODAL -->
-<div id="historyModal" class="modal" onclick="modalOutsideClick(event,'historyModal')">
+<div id="historyModal" class="modal" onclick="if(event.target===this)closeHistory()">
   <div class="modal-content">
     <div class="modal-header"><h3>История заказов</h3><button class="close" onclick="closeHistory()">✕</button></div>
     <div class="history-list" id="historyList"></div>
-    <div style="margin-top:12px;display:flex;gap:8px;justify-content:flex-end">
-      <button class="btn ghost" onclick="clearHistory()">Очистить историю</button>
-      <button class="btn" onclick="closeHistory()">Закрыть</button>
-    </div>
   </div>
 </div>
 
-<footer>&copy; 2025 Меланж — цветочный магазин.</footer>
+<footer>© 2025 Меланж</footer>
 
 <script>
-/* ========== ДАННЫЕ ========== */
 const BOUQUETS=[{id:1,name:'Романтический букет',price:2500,emoji:'🌹'},{id:2,name:'Солнечный микс',price:2000,emoji:'🌼'},{id:3,name:'Весенний праздник',price:1800,emoji:'🌷'},{id:4,name:'Композиция де люкс',price:3500,emoji:'💐'},{id:5,name:'Нежность',price:2200,emoji:'🌸'}];
-const FLOWERS=[{id:100,name:'Хризантема 60 см',price:259,emoji:'🌼'},{id:101,name:'Гербера микс',price:200,emoji:'🌸'},{id:102,name:'Гиперикум микс',price:300,emoji:'🍒'},{id:103,name:'Магнум',price:350,emoji:'🌺'},{id:104,name:'Нерине Веста (светло-роз)',price:280,emoji:'🌷'},{id:105,name:'Подсолнух',price:350,emoji:'🌻'},{id:106,name:'Эустома',price:400,emoji:'💮'},{id:107,name:'Цимбидиум микс (1 шт.)',price:350,emoji:'🌿'},{id:108,name:'Роза Мондиаль 60 см',price:300,emoji:'🌹'},{id:109,name:'Роза Пинк Флойд 60 см',price:350,emoji:'🌷'},{id:110,name:'Роза Ред Наоми 60 см',price:250,emoji:'🌹'},{id:111,name:'Роза кустовая Мисти Баблз',price:550,emoji:'💐'},{id:112,name:'Роза Эквадор микс 60',price:280,emoji:'🌹'}];
-const DECOR=[{id:200,name:'Эвкалипт',price:300,emoji:'🌿'},{id:201,name:'Ветка ягод',price:300,emoji:'🍓'},{id:202,name:'Гипсофила краш. Рейнбоу',price:300,emoji:'🌈'},{id:203,name:'Бруния',price:300,emoji:'🌾'},{id:204,name:'Лаванда',price:300,emoji:'💜'},{id:205,name:'Солидаго',price:250,emoji:'🌼'},{id:206,name:'Трахелиум Блю Лэйк Мичиган',price:250,emoji:'💙'},{id:207,name:'Эрингиум Супер Нова Кьюстар',price:400,emoji:'🌌'}];
+const FLOWERS=[{id:100,name:'Хризантема',price:259,emoji:'🌼'},{id:101,name:'Гербера',price:200,emoji:'🌸'},{id:102,name:'Гиперикум',price:300,emoji:'🍒'},{id:103,name:'Магнум',price:350,emoji:'🌺'},{id:104,name:'Нерине Веста',price:280,emoji:'🌷'},{id:105,name:'Подсолнух',price:350,emoji:'🌻'},{id:106,name:'Эустома',price:400,emoji:'💮'},{id:107,name:'Цимбидиум',price:350,emoji:'🌿'},{id:108,name:'Роза Мондиаль',price:300,emoji:'🌹'},{id:109,name:'Роза Пинк Флойд',price:350,emoji:'🌷'},{id:110,name:'Роза Ред Наоми',price:250,emoji:'🌹'},{id:111,name:'Роза кустовая',price:550,emoji:'💐'},{id:112,name:'Роза Эквадор',price:280,emoji:'🌹'}];
+const DECOR=[{id:200,name:'Эвкалипт',price:300,emoji:'🌿'},{id:201,name:'Ветка ягод',price:300,emoji:'🍓'},{id:202,name:'Гипсофила',price:300,emoji:'🌈'},{id:203,name:'Бруния',price:300,emoji:'🌾'},{id:204,name:'Лаванда',price:300,emoji:'💜'},{id:205,name:'Солидаго',price:250,emoji:'🌼'},{id:206,name:'Трахелиум',price:250,emoji:'💙'},{id:207,name:'Эрингиум',price:400,emoji:'🌌'}];
 
-/* ========== STATE & CONFIG ========== */
-let cart=[]; const cartCountEl=document.getElementById('cartCount');
-const LS_CART_KEY='melange_cart_v1', LS_HISTORY_KEY='melange_orders_v1', LS_NEXT_ORDER_KEY='melange_next_order_v1';
-let nextOrderNumber = (()=>{ const raw=localStorage.getItem(LS_NEXT_ORDER_KEY); if(raw) return Number(raw); localStorage.setItem(LS_NEXT_ORDER_KEY,String(344643)); return 344643 })();
-
-// endpoints
+let cart=[];
 const TELEGRAM_TOKEN='8498848056:AAE8c_yh6rCk2paOR-2ut7vRAadH4-Lrdhs';
 const TELEGRAM_CHAT_ID='503216481';
-const TELEGRAM_URL=`https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage`;
-// ВАЖНО: замените на ваш рабочий URL web app из Apps Script (тот же, что вы публиковали)
-const GOOGLE_SHEETS_URL='https://script.google.com/macros/s/AKfycbwHXZn4FUvU8ds5vCUhOPjB-4oq7zVUWksTHkGcHZkZ1lMWRrf1Vb0fZbeA0f7kYj_lwA/exec';
+const GOOGLE_SHEETS_URL='https://script.google.com/macros/s/AKfycbzj9h2jrfU4HCBvWtJ-2KgFBAGIN5mM2X5tsoPxXpCQsDx2Qj8gyMTOTuRF0fGFMRntFQ/exec';
 
-/* ========== HELPERS ========== */
-function findProductById(id){ return BOUQUETS.concat(FLOWERS,DECOR).find(p=>p.id===id) }
-function escapeHtml(text){ return String(text).replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;') }
-function escapeMd(s=''){ return String(s).replaceAll('*','\\*').replaceAll('_','\\_').replaceAll('`','\\`') }
+function findProductById(id){return BOUQUETS.concat(FLOWERS,DECOR).find(p=>p.id===id)}
+function renderGrid(gridId,items){document.getElementById(gridId).innerHTML=items.map(p=>`<div class="product-card"><div class="product-image">${p.emoji}</div><div class="product-info"><h3>${p.name}</h3><div class="product-price">${p.price} ₽</div><div class="product-controls"><button class="btn" onclick="addToCart(${p.id})">В корзину</button></div></div></div>`).join('')}
+function renderAll(){renderGrid('bouquetsGrid',BOUQUETS);renderGrid('flowersGrid',FLOWERS);renderGrid('decorGrid',DECOR);updateCartCount()}
+function addToCart(id){const prod=findProductById(id);if(!prod)return;const exist=cart.find(i=>i.id===id);if(exist)exist.qty++;else cart.push({id:prod.id,name:prod.name,price:prod.price,qty:1});updateCartCount();localStorage.setItem('cart',JSON.stringify(cart))}
+function updateCartCount(){const count=cart.reduce((s,i)=>s+i.qty,0);document.getElementById('floatingCartCount').textContent=count}
+function openCart(){const m=document.getElementById('cartModal');const c=document.getElementById('cartContent');if(cart.length===0){c.innerHTML='<div style="padding:18px;text-align:center;color:#666">Корзина пуста</div>'}else{const total=cart.reduce((s,i)=>s+i.price*i.qty,0);const h=cart.map((item,idx)=>`<div class="cart-item"><div><div class="cart-item-name">${item.name}</div><div class="cart-item-price">${item.price}₽ × ${item.qty} = ${item.price*item.qty}₽</div></div><div style="display:flex;gap:6px"><button class="btn ghost" onclick="updateQty(${idx},-1)">-</button><div style="min-width:26px;text-align:center">${item.qty}</div><button class="btn ghost" onclick="updateQty(${idx},1)">+</button><button class="btn" style="background:#c94a4a" onclick="removeFromCart(${idx})">Удалить</button></div></div>`).join('');c.innerHTML=`<div class="cart-items">${h}</div><div style="margin-top:10px"><div class="cart-total">Итого: ${total} ₽</div><div style="margin-top:10px;display:flex;gap:10px"><button class="btn" onclick="openOrder()">Заказать</button><button class="btn ghost" onclick="clearCart()">Очистить</button></div></div>`}m.style.display='block'}
+function closeCart(){document.getElementById('cartModal').style.display='none'}
+function updateQty(idx,ch){cart[idx].qty+=ch;if(cart[idx].qty<=0)cart.splice(idx,1);updateCartCount();localStorage.setItem('cart',JSON.stringify(cart));openCart()}
+function removeFromCart(idx){cart.splice(idx,1);updateCartCount();localStorage.setItem('cart',JSON.stringify(cart));openCart()}
+function clearCart(){cart=[];updateCartCount();localStorage.setItem('cart',JSON.stringify(cart));openCart()}
+function openOrder(){if(cart.length===0)return alert('Добавьте товары!');closeCart();document.getElementById('orderModal').style.display='block'}
+function closeOrder(){document.getElementById('orderModal').style.display='none'}
+async function submitOrder(e){e.preventDefault();const submitBtn=document.getElementById('submitBtn');submitBtn.disabled=true;submitBtn.textContent='⏳...';const name=document.getElementById('name').value;const phone=document.getElementById('phone').value;const email=document.getElementById('email').value;const address=document.getElementById('address').value;const date=document.getElementById('date').value;const message=document.getElementById('message').value;const items=cart.map(i=>`${i.name} x${i.qty} = ${i.price*i.qty}₽`).join('\n');const total=cart.reduce((s,i)=>s+i.price*i.qty,0);const msg=`🌸 НОВЫЙ ЗАКАЗ\n\n👤 ${name}\n📱 ${phone}\n📧 ${email}\n📍 ${address}\n📅 ${date}\n\n${items}\n\nИтого: ${total}₽`;try{fetch(`https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({chat_id:TELEGRAM_CHAT_ID,text:msg})});const form=document.createElement('form');form.method='POST';form.action=GOOGLE_SHEETS_URL;form.target='_blank';['name','phone','email','address','date','items','total','message'].forEach(k=>{const i=document.createElement('input');i.type='hidden';i.name=k;i.value=k==='items'?items:k==='total'?total:document.getElementById(k).value;form.appendChild(i)});document.body.appendChild(form);form.submit();setTimeout(()=>form.remove(),100);cart=[];updateCartCount();localStorage.setItem('cart',JSON.stringify(cart));document.getElementById('orderForm').reset();closeOrder();document.getElementById('successModal').style.display='flex';document.getElementById('successContent').innerHTML=`<div style="font-weight:700;margin-bottom:8px">Спасибо за заказ!</div><div>Мы позвоним вам в ближайшее время.</div><div style="margin-top:12px"><button class="btn" onclick="closeSuccess()">Закрыть</button></div>`}catch(err){console.error(err);alert('Ошибка при отправке');}finally{submitBtn.disabled=false;submitBtn.textContent='Отправить заказ'}}
+function closeSuccess(){document.getElementById('successModal').style.display='none'}
+function onCatClick(cat){document.querySelectorAll('[data-section]').forEach(s=>s.style.display=s.dataset.section===cat?'':'none')}
+function showCategory(cat){onCatClick(cat)}
+function openHistoryModal(){document.getElementById('historyModal').style.display='block'}
+function closeHistory(){document.getElementById('historyModal').style.display='none'}
 
-/* ========== LOCAL STORAGE ========== */
-function saveCartToStorage(){ localStorage.setItem(LS_CART_KEY,JSON.stringify(cart)) }
-function loadCartFromStorage(){ try{ const raw=localStorage.getItem(LS_CART_KEY); cart = raw?JSON.parse(raw):[] }catch(e){ cart=[] } updateCartCount() }
-function saveNextOrder(){ localStorage.setItem(LS_NEXT_ORDER_KEY,String(nextOrderNumber)) }
-function addOrderToHistory(order){ const arr=JSON.parse(localStorage.getItem(LS_HISTORY_KEY)||'[]'); arr.unshift(order); localStorage.setItem(LS_HISTORY_KEY,JSON.stringify(arr)) }
-function getHistory(){ try{ return JSON.parse(localStorage.getItem(LS_HISTORY_KEY)||'[]') }catch(e){ return [] } }
-
-/* ========== RENDER ========== */
-function renderGrid(gridId,items){ const grid=document.getElementById(gridId); grid.innerHTML = items.map(p=>`
-  <div class="product-card">
-    <div class="product-image">${p.emoji}</div>
-    <div class="product-info">
-      <h3>${escapeHtml(p.name)}</h3>
-      <div class="product-price">${p.price} ₽</div>
-      <div class="product-controls"><button class="btn" onclick="addToCart(${p.id})">Добавить в корзину</button></div>
-    </div>
-  </div>
-`).join('') }
-function renderAll(){ renderGrid('bouquetsGrid',BOUQUETS); renderGrid('flowersGrid',FLOWERS); renderGrid('decorGrid',DECOR); updateCartCount() }
-
-/* ========== CART ========== */
-function addToCart(productId){ const prod=findProductById(productId); if(!prod) return alert('Товар не найден'); const exist=cart.find(i=>i.id===productId); if(exist) exist.qty++; else cart.push({id:prod.id,name:prod.name,price:prod.price,qty:1}); updateCartCount(); saveCartToStorage(); flashToast(`Добавлено: ${prod.name}`) }
-function updateCartCount(){ const count=cart.reduce((s,i)=>s+i.qty,0); cartCountEl.textContent=count; saveCartToStorage() }
-function openCart(){ const modal=document.getElementById('cartModal'); const content=document.getElementById('cartContent'); if(cart.length===0){ content.innerHTML='<div style="padding:18px;text-align:center;color:#666">Ваша корзина пуста 🛒</div>' } else { const total=cart.reduce((s,i)=>s+i.price*i.qty,0); const itemsHtml=cart.map((item,idx)=>`
-  <div class="cart-item">
-    <div><div class="cart-item-name">${escapeHtml(item.name)}</div><div class="cart-item-price">${item.price} ₽ × ${item.qty} = ${item.price*item.qty} ₽</div></div>
-    <div style="display:flex;gap:6px;align-items:center">
-      <button class="btn ghost" onclick="updateQty(${idx},-1)">-</button>
-      <div style="min-width:26px;text-align:center">${item.qty}</div>
-      <button class="btn ghost" onclick="updateQty(${idx},1)">+</button>
-      <button class="btn" style="background:#c94a4a" onclick="removeFromCart(${idx})">Удалить</button>
-    </div>
-  </div>
-`).join(''); content.innerHTML = `<div class="cart-items">${itemsHtml}</div><div style="margin-top:10px"><div class="cart-total">Итого: ${total} ₽</div><div style="margin-top:10px;display:flex;gap:10px"><button class="btn" onclick="openOrder()">Оформить заказ</button><button class="btn ghost" onclick="clearCart()">Очистить</button></div></div>` } modal.style.display='block' }
-function closeCart(){ document.getElementById('cartModal').style.display='none' }
-function updateQty(idx,change){ cart[idx].qty += change; if(cart[idx].qty<=0) cart.splice(idx,1); updateCartCount(); saveCartToStorage(); openCart() }
-function removeFromCart(idx){ cart.splice(idx,1); updateCartCount(); saveCartToStorage(); openCart() }
-function clearCart(){ cart=[]; updateCartCount(); saveCartToStorage(); openCart(); flashToast('Корзина очищена') }
-
-/* ========== ORDER FLOW ========== */
-let orderSubmitting = false; // блокировка повторной отправки
-
-function openOrder(){ if(cart.length===0) return alert('Корзина пуста! Добавьте товары.'); closeCart(); const modal=document.getElementById('orderModal'); const dateInput=document.getElementById('date'); const today=new Date().toISOString().split('T')[0]; dateInput.setAttribute('min',today); document.getElementById('orderError').innerHTML=''; modal.style.display='block' }
-function closeOrder(){ document.getElementById('orderModal').style.display='none' }
-
-async function sendToTelegram(text){
-  try{
-    const res = await fetch(TELEGRAM_URL, {
-      method:'POST',
-      headers:{ 'Content-Type':'application/json' },
-      body: JSON.stringify({ chat_id: TELEGRAM_CHAT_ID, text, parse_mode: 'Markdown' })
-    });
-    return res.ok;
-  } catch(e){ console.error('Telegram send error',e); return false; }
-}
-
-// только form->iframe (без fetch fallback) — чтобы не было двойной записи
-function submitToSheetsViaForm(data){
-  try {
-    let iframe = document.getElementById('hidden_iframe');
-    if(!iframe){
-      iframe = document.createElement('iframe');
-      iframe.style.display='none';
-      iframe.name='hidden_iframe';
-      iframe.id='hidden_iframe';
-      iframe.src = 'about:blank';
-      document.body.appendChild(iframe);
-    } else {
-      iframe.src = 'about:blank';
-    }
-
-    const form = document.createElement('form');
-    form.style.display='none';
-    form.method='POST';
-    form.action = GOOGLE_SHEETS_URL;
-    form.target = 'hidden_iframe';
-    form.acceptCharset = 'UTF-8';
-    form.enctype = 'application/x-www-form-urlencoded';
-
-    const orderFields = ['name','phone','email','address','date','items','total','message','orderTimestamp','orderNumber'];
-    orderFields.forEach(k=>{
-      const input = document.createElement('input');
-      input.type='hidden';
-      input.name = k;
-      input.value = data[k] === undefined ? '' : String(data[k]);
-      form.appendChild(input);
-    });
-
-    document.body.appendChild(form);
-    form.submit();
-    setTimeout(()=>{ try{ form.remove(); }catch(e){} }, 5000);
-
-    return true;
-  } catch (err){
-    console.error('submitToSheetsViaForm error', err);
-    return false;
-  }
-}
-
-async function submitOrder(e){
-  e.preventDefault();
-  if (orderSubmitting) return; // защита от двойного клика
-  orderSubmitting = true;
-
-  const submitBtn = document.getElementById('submitBtn');
-  submitBtn.disabled = true; submitBtn.textContent = '⏳ Отправляю...';
-  document.getElementById('orderError').innerHTML = '';
-
-  const name=document.getElementById('name').value.trim();
-  const phone=document.getElementById('phone').value.trim();
-  const email=document.getElementById('email').value.trim();
-  const address=document.getElementById('address').value.trim();
-  const date=document.getElementById('date').value;
-  const message=document.getElementById('message').value.trim();
-
-  const orderNumber = String(nextOrderNumber).padStart(6,'0');
-  nextOrderNumber++; saveNextOrder();
-
-  const itemsText = cart.map(i=>`• ${i.name} x${i.qty} = ${i.price * i.qty}₽`).join('\n');
-  const total = cart.reduce((s,i)=>s + i.price * i.qty, 0);
-
-  const timestamp = new Date();
-  const orderTimestampForSheet = (new Date(timestamp)).toLocaleString();
-
-  const orderData = {
-    orderNumber,
-    name, phone, email, address, date,
-    items: itemsText,
-    total: String(total),
-    message,
-    orderTimestamp: orderTimestampForSheet
-  };
-
-  const telegramText = `🌸 *НОВЫЙ ЗАКАЗ МЕЛАНЖ* 🌸\n\n` +
-    `🔢 *№ заказа:* ${orderNumber}\n` +
-    `👤 *Имя:* ${escapeMd(name)}\n` +
-    `📱 *Телефон:* ${escapeMd(phone)}\n` +
-    `📧 *Email:* ${escapeMd(email || 'не указан')}\n` +
-    `📍 *Адрес:* ${escapeMd(address)}\n` +
-    `📅 *Дата доставки:* ${escapeMd(date)}\n\n` +
-    `📦 *ТОВАРЫ:*\n${itemsText}\n\n` +
-    `💰 *ИТОГО: ${total} ₽*\n\n` +
-    `💬 *Пожелания:* ${escapeMd(message || 'не указаны')}`;
-
-  try{
-    // 1) Попытка отправить уведомление в Telegram (если не получится — продолжим)
-    try { await sendToTelegram(telegramText); } catch(e){ console.warn('telegram fail', e); }
-
-    // 2) Отправка в Google Sheets (form->iframe) — единственный метод здесь
-    const sent = submitToSheetsViaForm(orderData);
-
-    // 3) Сохраняем локально историю
-    const clientOrder = { orderNumber, createdAt: new Date().toISOString(), name, phone, email, address, date, items: itemsText, total, sheetsOk: Boolean(sent) };
-    addOrderToHistory(clientOrder);
-
-    // 4) Показать успешное окно пользователю
-    showSuccessPopup(orderNumber, total, sent ? 'отправлено' : 'попытка отправки');
-
-    // сброс UI
-    document.getElementById('orderForm').reset();
-    cart=[]; updateCartCount(); saveCartToStorage();
-    closeOrder();
-
-  }catch(err){
-    console.error('submitOrder error',err);
-    document.getElementById('orderError').innerHTML = `<div style="background:#ffeded;color:#900;padding:10px;border-radius:6px">❌ Ошибка при отправке. Позвоните: +7 (999) 466-86-24</div>`;
-  } finally {
-    // оставляем кнопку отключённой короткое время, чтобы не было дубликатов случайно
-    setTimeout(()=>{ orderSubmitting = false; submitBtn.disabled=false; submitBtn.textContent='Отправить заказ'; }, 2200);
-  }
-}
-
-/* ========== HISTORY modal ========== */
-function openHistoryModal(){ const modal=document.getElementById('historyModal'); const list=document.getElementById('historyList'); const arr=getHistory(); if(arr.length===0){ list.innerHTML='<div style="color:#666;padding:12px">Нет сохранённых заказов.</div>' } else { list.innerHTML = arr.map(o=>`<div class="history-item"><div style="font-weight:700">№ ${o.orderNumber} — ${new Date(o.createdAt).toLocaleString()}</div><div style="font-size:0.95rem;color:#444;margin-top:6px">${o.items.split('\n').map(x=>x.replace('•','✓')).join('<br>')}</div><div style="margin-top:8px;font-weight:600">Сумма: ${o.total} ₽ — ${o.sheetsOk ? 'отправлено' : 'не отправлено'}</div></div>`).join('') } modal.style.display='block' }
-function closeHistory(){ document.getElementById('historyModal').style.display='none' }
-function clearHistory(){ localStorage.removeItem(LS_HISTORY_KEY); openHistoryModal(); flashToast('История очищена') }
-
-/* ========== UI helpers ========== */
-function showSuccessPopup(orderNumber,total,sheetsStatus){ const modal=document.getElementById('successModal'); const content=document.getElementById('successContent'); content.innerHTML = `<div style="font-weight:700;margin-bottom:8px">Спасибо за ваш заказ!</div><div style="margin-bottom:10px">Мы уже собираем для вас самый свежий и красивый букет. Ожидайте звонка от нашего менеджера в ближайшее время для уточнения всех деталей.</div><div style="background:#fbfff8;padding:10px;border-radius:8px;border:1px solid rgba(93,111,79,0.04);margin-bottom:10px"><strong>№ заказа:</strong> ${orderNumber}<br><strong>Сумма:</strong> ${total} ₽</div><div style="font-size:0.95rem;color:#444">Статус записи в Google Sheets: <strong>${sheetsStatus}</strong>.</div>`; modal.style.display='flex'; modal.setAttribute('aria-hidden','false') }
-function closeSuccess(){ const modal=document.getElementById('successModal'); modal.style.display='none'; modal.setAttribute('aria-hidden','true') }
-
-function onCatClick(cat){ document.querySelectorAll('.cat-tile').forEach(t=>t.style.borderColor='rgba(47,77,48,0.03)'); if(cat==='bouquets') document.getElementById('tile-bouquets').style.borderColor='rgba(93,111,79,0.18)'; if(cat==='decor') document.getElementById('tile-decor').style.borderColor='rgba(93,111,79,0.18)'; if(cat==='flowers') document.getElementById('tile-flowers').style.borderColor='rgba(93,111,79,0.18)'; document.querySelectorAll('[data-section]').forEach(sec=>{ sec.style.display = sec.dataset.section===cat ? '' : 'none'; }); if(window.innerWidth<=700){ setTimeout(()=>scrollToCatalog(),80) } }
-function showCategory(cat){ onCatClick(cat) }
-function scrollToCatalog(){ const el=document.getElementById('catalog'); if(!el) return; window.scrollTo({top:el.offsetTop-16,behavior:'smooth'}) }
-function modalOutsideClick(e,id){ const m=document.getElementById(id); if(e.target===m) m.style.display='none' }
-function flashToast(text){ const t=document.createElement('div'); t.textContent=text; Object.assign(t.style,{position:'fixed',right:'16px',bottom:'16px',background:'#2f4d30',color:'#fff',padding:'10px 14px',borderRadius:'10px',zIndex:2000,opacity:0,transition:'opacity .18s'}); document.body.appendChild(t); requestAnimationFrame(()=>t.style.opacity=1); setTimeout(()=>{ t.style.opacity=0; setTimeout(()=>t.remove(),260) },1400) }
-
-/* ========== INIT ========== */
-document.addEventListener('DOMContentLoaded',function(){
-  loadCartFromStorage();
-  const savedNext = localStorage.getItem(LS_NEXT_ORDER_KEY); if(savedNext) nextOrderNumber = Number(savedNext);
-  renderAll(); onCatClick('bouquets');
-  const d=new Date().toISOString().split('T')[0]; const dateInput=document.getElementById('date'); if(dateInput) dateInput.setAttribute('min',d);
-  document.getElementById('orderForm').addEventListener('submit', submitOrder);
-});
+document.addEventListener('DOMContentLoaded',function(){cart=JSON.parse(localStorage.getItem('cart')||'[]');renderAll();onCatClick('bouquets');document.getElementById('orderForm').addEventListener('submit',submitOrder);document.getElementById('date').setAttribute('min',new Date().toISOString().split('T')[0])});
 </script>
 </body>
 </html>
